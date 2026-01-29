@@ -1,0 +1,81 @@
+# =========================
+# Unity generated folders
+# =========================
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+
+# =========================
+# User-specific files
+# =========================
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+
+# =========================
+# Unity3D generated meta
+# =========================
+*.pidb.meta
+*.pdb.meta
+
+# =========================
+# Unity crash reports
+# =========================
+sysinfo.txt
+
+# =========================
+# OS generated files
+# =========================
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# =========================
+# IDE folders
+# =========================
+.vscode/
+.idea/
+*.swp
+*.tmp
+
+# =========================
+# Builds & exported packages
+# =========================
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.exe
+
+# =========================
+# Visual Studio cache
+# =========================
+.vs/
+
+# =========================
+# Rider
+# =========================
+.idea/
+
+# =========================
+# Addressables (optional)
+# =========================
+/Assets/AddressableAssetsData/*/*.bin*
+
+# =========================
+# Do NOT ignore these
+# =========================
+!/[Aa]ssets/
+!/[Pp]ackages/
+!/[Pp]rojectSettings/
