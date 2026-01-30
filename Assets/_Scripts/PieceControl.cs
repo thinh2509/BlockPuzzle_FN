@@ -103,6 +103,7 @@ public class PieceControl : MonoBehaviour
             for(int i = 0; i < transform.childCount; i++)
             {
                 childBlockTransforms[i] = transform.GetChild(i);
+                ScoreManager.Instance.AddPoints(10); // Thêm 10 điểm cho mỗi block được đặt
             }
             gridManager.PlacePiece(childBlockTransforms);
 

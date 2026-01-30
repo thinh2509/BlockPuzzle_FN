@@ -118,14 +118,41 @@ public class GridManager : MonoBehaviour
 
     public void CheckForCompletedLines()
     {
+        int clearedLinesThisTurn = 0;
+
         for (int y = 0; y < height; y++)
         {
             if (IsRowComplete(y))
             {
                 ClearRow(y);
                 ShiftRowsDown(y + 1);
+                clearedLinesThisTurn++;
                 y--; // Giảm y để kiểm tra lại hàng hiện tại (vì nó đã được dịch chuyển từ trên xuống)
             }
+        }
+
+        // Kiểm tra các cột
+        for (int x = 0; x < width; x++)
+        {
+            if (IsColumnComplete(x))
+            {
+                ClearColumn(x);
+                clearedLinesThisTurn++;
+                x--; // Giảm x để kiểm tra lại cột hiện tại
+            }
+        }
+
+        if (clearedLinesThisTurn > 0)
+        {
+            ScoreManager.Instance.IncrementCombo();
+            // Tính điểm combo cho các hàng/cột đã xóa
+            int basePoints = 100;
+            int comboMultiplier = ScoreManager.Instance.ComboCount + 1; // Combo x2, x3...
+            ScoreManager.Instance.AddPoints(basePoints * clearedLinesThisTurn * comboMultiplier);
+        }
+        else
+        {
+            ScoreManager.Instance.ResetCombo();
         }
     }
 
@@ -169,6 +196,31 @@ public class GridManager : MonoBehaviour
                     // Di chuyển khối gạch trong thế giới game (visual)
                     grid[x, y - 1].position += Vector3.down * spacing;
                 }
+            }
+        }
+    }
+
+    private bool IsColumnComplete(int x)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            if (grid[x, y] == null)
+            {
+                return false; // Tìm thấy ô trống, cột chưa đầy
+            }
+        }
+        return true; // Không tìm thấy ô trống nào, cột đã đầy
+    }
+
+    private void ClearColumn(int x)
+    {
+        Debug.Log($"Clearing column {x}");
+        for (int y = 0; y < height; y++)
+        {
+            if (grid[x, y] != null)
+            {
+                Destroy(grid[x, y].gameObject); // Hủy GameObject của khối gạch
+                grid[x, y] = null; // Xóa tham chiếu khỏi grid
             }
         }
     }
