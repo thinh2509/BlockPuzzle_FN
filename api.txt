@@ -1,0 +1,17 @@
+/api/Auth/login:
+
+{
+  "email": "user@example.com",
+  "password": "string"
+}
+
+/api/Auth/register:
+
+{
+  "email": "user@example.com",
+  "password": "string",
+  "name": "string",
+  "address": "string",
+  "dateOfBirth": "2026-01-31T07:36:39.980Z",
+  "gender": "string"
+}
