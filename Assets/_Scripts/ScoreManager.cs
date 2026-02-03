@@ -1,5 +1,5 @@
 using UnityEngine;
-using TMPro; // Để hiển thị điểm trên UI nếu cần
+using TMPro; 
 
 public class ScoreManager : MonoBehaviour
 {
@@ -8,15 +8,15 @@ public class ScoreManager : MonoBehaviour
     public int CurrentScore { get; private set; } = 0;
     public int ComboCount { get; private set; } = 0;
 
-    [SerializeField] private TextMeshProUGUI scoreText; // Kéo TextMeshProUGUI vào đây từ Inspector
-    [SerializeField] private TextMeshProUGUI comboText; // Kéo TextMeshProUGUI vào đây từ Inspector
+    [SerializeField] private TextMeshProUGUI scoreText; 
+    [SerializeField] private TextMeshProUGUI comboText; 
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Giữ ScoreManager giữa các scene
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -48,15 +48,26 @@ public class ScoreManager : MonoBehaviour
         UpdateComboUI();
     }
 
+    //private void UpdateScoreUI()
+    //{
+    //    if (scoreText != null)
+    //    {
+    //        scoreText.text = "Score: " + CurrentScore.ToString();
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("Score TextMeshProUGUI is not assigned in ScoreManager.");
+    //    }
+    //}
     private void UpdateScoreUI()
     {
         if (scoreText != null)
-        {
-            scoreText.text = "Score: " + CurrentScore.ToString();
+        {         
+            scoreText.text = "<color=#55AAFF>S</color><color=#FF5555>C</color><color=#FFAA00>O</color><color=#55FF55>R</color><color=#FFDD55>E</color>: " + CurrentScore.ToString();
         }
         else
         {
-            Debug.LogWarning("Score TextMeshProUGUI is not assigned in ScoreManager.");
+            UnityEngine.Debug.LogWarning("Score TextMeshProUGUI is not assigned in ScoreManager.");
         }
     }
 
@@ -70,7 +81,7 @@ public class ScoreManager : MonoBehaviour
             }
             else
             {
-                comboText.text = ""; // Không hiển thị combo khi không có
+                comboText.text = null;
             }
         }
         else

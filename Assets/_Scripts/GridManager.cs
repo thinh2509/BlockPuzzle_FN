@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class GridManager : MonoBehaviour
 {
     public int width = 10;
     public int height = 10;
-    public GameObject cellPrefab; // Kéo Prefab vào đây
-    public float spacing = 1.1f; // Khoảng cách giữa các ô (1.0 là dính liền)
+    public GameObject cellPrefab; 
+    public float spacing = 1.1f;
 
-    // [NÂNG CẤP] Thay đổi mảng bool thành mảng Transform để lưu trữ các khối gạch
+    
     private Transform[,] grid; 
 
     void Start()
@@ -17,7 +18,7 @@ public class GridManager : MonoBehaviour
 
     void GenerateGrid()
     {
-        // Khởi tạo grid mới
+        
         grid = new Transform[width, height];
 
         float gridW = width * spacing;
@@ -79,18 +80,18 @@ public class GridManager : MonoBehaviour
         return snappedWorldPos;
     }
 
-    // [NÂNG CẤP] Kiểm tra xem ô có bị chiếm chưa bằng cách xem nó có null không
+    
     public bool IsCellOccupied(int x, int y)
     {
         if (x < 0 || x >= width || y < 0 || y >= height)
         {
             return true;
         }
-        // Nếu trong ô có một Transform, tức là nó đã bị chiếm
+        
         return grid[x, y] != null;
     }
 
-    // [NÂNG CẤP] Hàm này nhận vào mảng các Transform của các ô vuông nhỏ
+    
     public void PlacePiece(Transform[] blockPieces)
     {
         foreach (var block in blockPieces)
@@ -98,7 +99,7 @@ public class GridManager : MonoBehaviour
             Vector2Int gridPos = WorldToGrid(block.position);
             if (gridPos.x >= 0 && gridPos.x < width && gridPos.y >= 0 && gridPos.y < height)
             {
-                // Lưu trữ Transform của ô vuông nhỏ vào grid
+                
                 grid[gridPos.x, gridPos.y] = block;
             }
         }
@@ -114,7 +115,6 @@ public class GridManager : MonoBehaviour
         return false;
     }
 
-    // --- LOGIC XÓA HÀNG ---
 
     public void CheckForCompletedLines()
     {
@@ -125,29 +125,28 @@ public class GridManager : MonoBehaviour
             if (IsRowComplete(y))
             {
                 ClearRow(y);
-                ShiftRowsDown(y + 1);
                 clearedLinesThisTurn++;
-                y--; // Giảm y để kiểm tra lại hàng hiện tại (vì nó đã được dịch chuyển từ trên xuống)
+                y--; 
             }
         }
 
-        // Kiểm tra các cột
+        
         for (int x = 0; x < width; x++)
         {
             if (IsColumnComplete(x))
             {
                 ClearColumn(x);
                 clearedLinesThisTurn++;
-                x--; // Giảm x để kiểm tra lại cột hiện tại
+                x--;
             }
         }
 
         if (clearedLinesThisTurn > 0)
         {
             ScoreManager.Instance.IncrementCombo();
-            // Tính điểm combo cho các hàng/cột đã xóa
+         
             int basePoints = 100;
-            int comboMultiplier = ScoreManager.Instance.ComboCount + 1; // Combo x2, x3...
+            int comboMultiplier = ScoreManager.Instance.ComboCount + 1; 
             ScoreManager.Instance.AddPoints(basePoints * clearedLinesThisTurn * comboMultiplier);
         }
         else
@@ -162,10 +161,10 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] == null)
             {
-                return false; // Tìm thấy ô trống, hàng chưa đầy
+                return false; 
             }
         }
-        return true; // Không tìm thấy ô trống nào, hàng đã đầy
+        return true; 
     }
 
     private void ClearRow(int y)
@@ -175,27 +174,8 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] != null)
             {
-                Destroy(grid[x, y].gameObject); // Hủy GameObject của khối gạch
-                grid[x, y] = null; // Xóa tham chiếu khỏi grid
-            }
-        }
-    }
-
-    private void ShiftRowsDown(int startY)
-    {
-        for (int y = startY; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                if (grid[x, y] != null)
-                {
-                    // Di chuyển khối gạch trong mảng dữ liệu
-                    grid[x, y - 1] = grid[x, y];
-                    grid[x, y] = null;
-
-                    // Di chuyển khối gạch trong thế giới game (visual)
-                    grid[x, y - 1].position += Vector3.down * spacing;
-                }
+                StartCoroutine(FadeOutAndDestroy(grid[x, y].gameObject));
+                grid[x, y] = null;
             }
         }
     }
@@ -206,10 +186,10 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] == null)
             {
-                return false; // Tìm thấy ô trống, cột chưa đầy
+                return false; 
             }
         }
-        return true; // Không tìm thấy ô trống nào, cột đã đầy
+        return true; 
     }
 
     private void ClearColumn(int x)
@@ -219,9 +199,101 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] != null)
             {
-                Destroy(grid[x, y].gameObject); // Hủy GameObject của khối gạch
-                grid[x, y] = null; // Xóa tham chiếu khỏi grid
+                StartCoroutine(FadeOutAndDestroy(grid[x, y].gameObject));
+                grid[x, y] = null; 
             }
+        }
+    }
+
+    private IEnumerator FadeOutAndDestroy(GameObject blockToDestroy)
+    {
+        SpriteRenderer renderer = blockToDestroy.GetComponent<SpriteRenderer>();
+        if (renderer == null)
+        {
+            Destroy(blockToDestroy);
+            yield break;
+        }
+
+        float duration = 0.5f;
+        float elapsedTime = 0f;
+        Color originalColor = renderer.color;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration);
+            renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            yield return null;
+        }
+
+        Destroy(blockToDestroy);
+    }
+
+    public Transform[,] GetGridData()
+    {
+        return grid;
+    }
+
+    public Vector3 GridToWorld(Vector2Int gridPos)
+    {
+        Vector3 gridBottomLeft = GetGridBottomLeft();
+        return gridBottomLeft + new Vector3(gridPos.x * spacing, gridPos.y * spacing, 0);
+    }
+
+    public bool CanPlaceAt(GameObject piece, Vector2Int gridAnchorPos)
+    {
+        // Guard clause: An empty piece is not placeable and should not be considered a valid move.
+        if (piece.transform.childCount == 0)
+        {
+            return false;
+        }
+
+        // Store original transform to restore it later
+        Vector3 originalPos = piece.transform.position;
+        Quaternion originalRot = piece.transform.rotation;
+        Vector3 originalScale = piece.transform.localScale;
+
+        try
+        {
+            // Normalize the piece's transform for a clean shape calculation
+            piece.transform.position = Vector3.zero;
+            piece.transform.rotation = Quaternion.identity;
+            piece.transform.localScale = Vector3.one;
+
+            // Get the world position for the target grid anchor
+            Vector3 anchorWorldPos = GridToWorld(gridAnchorPos);
+
+            // Check each child block of the piece
+            foreach (Transform child in piece.transform)
+            {
+                // child.position is now a 'clean' world offset from the piece's origin (0,0,0)
+                // We add it to our target anchor position to get the final world position for the block
+                Vector3 blockWorldPos = anchorWorldPos + child.position; 
+                
+                Vector2Int blockGridPos = WorldToGrid(blockWorldPos);
+
+                // Check 1: Is the block out of the grid boundaries?
+                if (blockGridPos.x < 0 || blockGridPos.x >= width || blockGridPos.y < 0 || blockGridPos.y >= height)
+                {
+                    return false; // Fails: Out of bounds
+                }
+
+                // Check 2: Is the grid cell already occupied?
+                if (grid[blockGridPos.x, blockGridPos.y] != null)
+                {
+                    return false; // Fails: Occupied
+                }
+            }
+
+            // If we looped through all children and none failed, the placement is valid
+            return true;
+        }
+        finally
+        {
+            // ALWAYS restore the piece to its original state, no matter what happens
+            piece.transform.position = originalPos;
+            piece.transform.rotation = originalRot;
+            piece.transform.localScale = originalScale;
         }
     }
 }
