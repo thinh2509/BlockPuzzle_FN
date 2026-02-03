@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class GridManager : MonoBehaviour
 {
@@ -124,7 +125,6 @@ public class GridManager : MonoBehaviour
             if (IsRowComplete(y))
             {
                 ClearRow(y);
-                ShiftRowsDown(y + 1);
                 clearedLinesThisTurn++;
                 y--; 
             }
@@ -137,7 +137,8 @@ public class GridManager : MonoBehaviour
             {
                 ClearColumn(x);
                 clearedLinesThisTurn++;
-                x--; 
+                x--;
+            }
         }
 
         if (clearedLinesThisTurn > 0)
@@ -173,25 +174,8 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] != null)
             {
-                Destroy(grid[x, y].gameObject); 
-                grid[x, y] = null; 
-        }
-    }
-
-    private void ShiftRowsDown(int startY)
-    {
-        for (int y = startY; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                if (grid[x, y] != null)
-                {
-                    
-                    grid[x, y - 1] = grid[x, y];
-                    grid[x, y] = null;
-                   
-                    grid[x, y - 1].position += Vector3.down * spacing;
-                }
+                StartCoroutine(FadeOutAndDestroy(grid[x, y].gameObject));
+                grid[x, y] = null;
             }
         }
     }
@@ -215,9 +199,101 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] != null)
             {
-                Destroy(grid[x, y].gameObject); 
+                StartCoroutine(FadeOutAndDestroy(grid[x, y].gameObject));
                 grid[x, y] = null; 
             }
+        }
+    }
+
+    private IEnumerator FadeOutAndDestroy(GameObject blockToDestroy)
+    {
+        SpriteRenderer renderer = blockToDestroy.GetComponent<SpriteRenderer>();
+        if (renderer == null)
+        {
+            Destroy(blockToDestroy);
+            yield break;
+        }
+
+        float duration = 0.5f;
+        float elapsedTime = 0f;
+        Color originalColor = renderer.color;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration);
+            renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            yield return null;
+        }
+
+        Destroy(blockToDestroy);
+    }
+
+    public Transform[,] GetGridData()
+    {
+        return grid;
+    }
+
+    public Vector3 GridToWorld(Vector2Int gridPos)
+    {
+        Vector3 gridBottomLeft = GetGridBottomLeft();
+        return gridBottomLeft + new Vector3(gridPos.x * spacing, gridPos.y * spacing, 0);
+    }
+
+    public bool CanPlaceAt(GameObject piece, Vector2Int gridAnchorPos)
+    {
+        // Guard clause: An empty piece is not placeable and should not be considered a valid move.
+        if (piece.transform.childCount == 0)
+        {
+            return false;
+        }
+
+        // Store original transform to restore it later
+        Vector3 originalPos = piece.transform.position;
+        Quaternion originalRot = piece.transform.rotation;
+        Vector3 originalScale = piece.transform.localScale;
+
+        try
+        {
+            // Normalize the piece's transform for a clean shape calculation
+            piece.transform.position = Vector3.zero;
+            piece.transform.rotation = Quaternion.identity;
+            piece.transform.localScale = Vector3.one;
+
+            // Get the world position for the target grid anchor
+            Vector3 anchorWorldPos = GridToWorld(gridAnchorPos);
+
+            // Check each child block of the piece
+            foreach (Transform child in piece.transform)
+            {
+                // child.position is now a 'clean' world offset from the piece's origin (0,0,0)
+                // We add it to our target anchor position to get the final world position for the block
+                Vector3 blockWorldPos = anchorWorldPos + child.position; 
+                
+                Vector2Int blockGridPos = WorldToGrid(blockWorldPos);
+
+                // Check 1: Is the block out of the grid boundaries?
+                if (blockGridPos.x < 0 || blockGridPos.x >= width || blockGridPos.y < 0 || blockGridPos.y >= height)
+                {
+                    return false; // Fails: Out of bounds
+                }
+
+                // Check 2: Is the grid cell already occupied?
+                if (grid[blockGridPos.x, blockGridPos.y] != null)
+                {
+                    return false; // Fails: Occupied
+                }
+            }
+
+            // If we looped through all children and none failed, the placement is valid
+            return true;
+        }
+        finally
+        {
+            // ALWAYS restore the piece to its original state, no matter what happens
+            piece.transform.position = originalPos;
+            piece.transform.rotation = originalRot;
+            piece.transform.localScale = originalScale;
         }
     }
 }

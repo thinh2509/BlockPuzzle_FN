@@ -8,6 +8,15 @@
 [Bb]uilds/
 [Ll]ogs/
 [Mm]emoryCaptures/
+UserSettings/
+
+# =========================
+# Unity cache / GI cache
+# =========================
+/Library/ShaderCache/
+/Library/Artifacts/
+/Library/SourceAssetDB/
+/Library/PackageCache/
 
 # =========================
 # User-specific files
@@ -20,12 +29,14 @@
 *.userprefs
 *.pidb
 *.booproj
+*.opendb
 
 # =========================
-# Unity3D generated meta
+# Unity generated meta (debug)
 # =========================
 *.pidb.meta
 *.pdb.meta
+*.mdb.meta
 
 # =========================
 # Unity crash reports
@@ -40,6 +51,7 @@ sysinfo.txt
 Thumbs.db
 ehthumbs.db
 Icon?
+desktop.ini
 
 # =========================
 # IDE folders
@@ -48,18 +60,11 @@ Icon?
 .idea/
 *.swp
 *.tmp
+*.bak
+*.log
 
 # =========================
-# Builds & exported packages
-# =========================
-*.apk
-*.aab
-*.unitypackage
-*.app
-*.exe
-
-# =========================
-# Visual Studio cache
+# Visual Studio
 # =========================
 .vs/
 
@@ -69,13 +74,46 @@ Icon?
 .idea/
 
 # =========================
-# Addressables (optional)
+# Builds & exported packages
+# =========================
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.exe
+*.ipa
+*.obb
+
+# =========================
+# Android / Gradle
+# =========================
+.gradle/
+local.properties
+build/
+captures/
+
+# =========================
+# iOS / Xcode
+# =========================
+DerivedData/
+*.xcworkspace
+*.xcuserdata
+
+# =========================
+# Addressables
 # =========================
 /Assets/AddressableAssetsData/*/*.bin*
+/Assets/AddressableAssetsData/*/*.hash
+
+# =========================
+# TextMeshPro generated
+# =========================
+/Assets/TextMesh Pro/Resources/Fonts & Materials/*.asset.meta
 
 # =========================
 # Do NOT ignore these
 # =========================
 !/[Aa]ssets/
+!/[Aa]ssets/**/*.meta
 !/[Pp]ackages/
 !/[Pp]rojectSettings/

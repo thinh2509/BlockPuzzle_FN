@@ -63,31 +63,40 @@ public class PieceControl : MonoBehaviour
 
         bool canPlace = true;
         
-        Vector3[] childBlockPositions = new Vector3[transform.childCount];
-
-        
-        for (int i = 0; i < transform.childCount; i++)
+        // We need to check for out of bounds as well.
+        // The original logic was missing this, which could be a bug.
+        if (!gridManager.IsWithinGrid(snappedPosition))
         {
-            Transform child = transform.GetChild(i);
-            
-            Vector3 positionOffset = child.position - transform.position;
-            
-            childBlockPositions[i] = snappedPosition + positionOffset;
+            canPlace = false;
         }
 
-        
-        foreach (var blockPos in childBlockPositions)
+        if(canPlace) // Only proceed if the anchor is within the grid
         {
-            
-            Vector2Int gridCoords = gridManager.WorldToGrid(blockPos);
-
-            
-            if (gridManager.IsCellOccupied(gridCoords.x, gridCoords.y))
+            Vector3[] childBlockPositions = new Vector3[transform.childCount];
+            for (int i = 0; i < transform.childCount; i++)
             {
-                canPlace = false;
-                break; 
+                Transform child = transform.GetChild(i);
+                Vector3 positionOffset = child.position - transform.position;
+                childBlockPositions[i] = snappedPosition + positionOffset;
+            }
+
+            foreach (var blockPos in childBlockPositions)
+            {
+                Vector2Int gridCoords = gridManager.WorldToGrid(blockPos);
+
+                if (!gridManager.IsWithinGrid(blockPos))
+                {
+                    canPlace = false;
+                    break;
+                }
+                if (gridManager.IsCellOccupied(gridCoords.x, gridCoords.y))
+                {
+                    canPlace = false;
+                    break; 
+                }
             }
         }
+
 
         
         if (canPlace)
