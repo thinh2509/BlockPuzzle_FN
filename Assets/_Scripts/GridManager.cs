@@ -137,7 +137,8 @@ public class GridManager : MonoBehaviour
             {
                 ClearColumn(x);
                 clearedLinesThisTurn++;
-                x--; 
+                x--;
+            }
         }
 
         if (clearedLinesThisTurn > 0)
@@ -173,8 +174,9 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] != null)
             {
-                Destroy(grid[x, y].gameObject); 
-                grid[x, y] = null; 
+                Destroy(grid[x, y].gameObject);
+                grid[x, y] = null;
+            }
         }
     }
 
