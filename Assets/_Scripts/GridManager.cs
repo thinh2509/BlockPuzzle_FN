@@ -115,6 +115,7 @@ public class GridManager : MonoBehaviour
     }
 
 
+
     public void CheckForCompletedLines()
     {
         int clearedLinesThisTurn = 0;

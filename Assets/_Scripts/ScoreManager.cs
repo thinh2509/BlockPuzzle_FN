@@ -1,5 +1,5 @@
 using UnityEngine;
-using TMPro; // Để hiển thị điểm trên UI nếu cần
+using TMPro; 
 
 public class ScoreManager : MonoBehaviour
 {
@@ -8,15 +8,15 @@ public class ScoreManager : MonoBehaviour
     public int CurrentScore { get; private set; } = 0;
     public int ComboCount { get; private set; } = 0;
 
-    [SerializeField] private TextMeshProUGUI scoreText; // Kéo TextMeshProUGUI vào đây từ Inspector
-    [SerializeField] private TextMeshProUGUI comboText; // Kéo TextMeshProUGUI vào đây từ Inspector
+    [SerializeField] private TextMeshProUGUI scoreText; 
+    [SerializeField] private TextMeshProUGUI comboText;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Giữ ScoreManager giữa các scene
+            DontDestroyOnLoad(gameObject); 
         }
         else
         {
@@ -70,7 +70,7 @@ public class ScoreManager : MonoBehaviour
             }
             else
             {
-                comboText.text = ""; // Không hiển thị combo khi không có
+                comboText.text = ""; 
             }
         }
         else
