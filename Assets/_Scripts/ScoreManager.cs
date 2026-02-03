@@ -48,15 +48,28 @@ public class ScoreManager : MonoBehaviour
         UpdateComboUI();
     }
 
+    //private void UpdateScoreUI()
+    //{
+    //    if (scoreText != null)
+    //    {
+    //        scoreText.text = "Score: " + CurrentScore.ToString();
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("Score TextMeshProUGUI is not assigned in ScoreManager.");
+    //    }
+    //}
     private void UpdateScoreUI()
     {
         if (scoreText != null)
         {
-            scoreText.text = "Score: " + CurrentScore.ToString();
+            // Sử dụng mã màu Hex để giữ màu cho chữ "SCORE"
+            // Bạn có thể thay đổi mã màu #... theo đúng ý thích của mình nhé
+            scoreText.text = "<color=#55AAFF>S</color><color=#FF5555>C</color><color=#FFAA00>O</color><color=#55FF55>R</color><color=#FFDD55>E</color>: " + CurrentScore.ToString();
         }
         else
         {
-            Debug.LogWarning("Score TextMeshProUGUI is not assigned in ScoreManager.");
+            UnityEngine.Debug.LogWarning("Score TextMeshProUGUI is not assigned in ScoreManager.");
         }
     }
 
