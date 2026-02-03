@@ -4,10 +4,10 @@ public class GridManager : MonoBehaviour
 {
     public int width = 10;
     public int height = 10;
-    public GameObject cellPrefab; // Kéo Prefab vào đây
-    public float spacing = 1.1f; // Khoảng cách giữa các ô (1.0 là dính liền)
+    public GameObject cellPrefab; 
+    public float spacing = 1.1f; 
 
-    // [NÂNG CẤP] Thay đổi mảng bool thành mảng Transform để lưu trữ các khối gạch
+    
     private Transform[,] grid; 
 
     void Start()
@@ -17,7 +17,7 @@ public class GridManager : MonoBehaviour
 
     void GenerateGrid()
     {
-        // Khởi tạo grid mới
+        
         grid = new Transform[width, height];
 
         float gridW = width * spacing;
@@ -79,18 +79,18 @@ public class GridManager : MonoBehaviour
         return snappedWorldPos;
     }
 
-    // [NÂNG CẤP] Kiểm tra xem ô có bị chiếm chưa bằng cách xem nó có null không
+    
     public bool IsCellOccupied(int x, int y)
     {
         if (x < 0 || x >= width || y < 0 || y >= height)
         {
             return true;
         }
-        // Nếu trong ô có một Transform, tức là nó đã bị chiếm
+        
         return grid[x, y] != null;
     }
 
-    // [NÂNG CẤP] Hàm này nhận vào mảng các Transform của các ô vuông nhỏ
+   
     public void PlacePiece(Transform[] blockPieces)
     {
         foreach (var block in blockPieces)
@@ -98,7 +98,7 @@ public class GridManager : MonoBehaviour
             Vector2Int gridPos = WorldToGrid(block.position);
             if (gridPos.x >= 0 && gridPos.x < width && gridPos.y >= 0 && gridPos.y < height)
             {
-                // Lưu trữ Transform của ô vuông nhỏ vào grid
+                
                 grid[gridPos.x, gridPos.y] = block;
             }
         }
@@ -114,7 +114,6 @@ public class GridManager : MonoBehaviour
         return false;
     }
 
-    // --- LOGIC XÓA HÀNG ---
 
     public void CheckForCompletedLines()
     {
@@ -127,27 +126,27 @@ public class GridManager : MonoBehaviour
                 ClearRow(y);
                 ShiftRowsDown(y + 1);
                 clearedLinesThisTurn++;
-                y--; // Giảm y để kiểm tra lại hàng hiện tại (vì nó đã được dịch chuyển từ trên xuống)
+                y--; 
             }
         }
 
-        // Kiểm tra các cột
+      
         for (int x = 0; x < width; x++)
         {
             if (IsColumnComplete(x))
             {
                 ClearColumn(x);
                 clearedLinesThisTurn++;
-                x--; // Giảm x để kiểm tra lại cột hiện tại
+                x--; 
             }
         }
 
         if (clearedLinesThisTurn > 0)
         {
             ScoreManager.Instance.IncrementCombo();
-            // Tính điểm combo cho các hàng/cột đã xóa
+            
             int basePoints = 100;
-            int comboMultiplier = ScoreManager.Instance.ComboCount + 1; // Combo x2, x3...
+            int comboMultiplier = ScoreManager.Instance.ComboCount + 1; 
             ScoreManager.Instance.AddPoints(basePoints * clearedLinesThisTurn * comboMultiplier);
         }
         else
@@ -162,10 +161,10 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] == null)
             {
-                return false; // Tìm thấy ô trống, hàng chưa đầy
+                return false; 
             }
         }
-        return true; // Không tìm thấy ô trống nào, hàng đã đầy
+        return true; 
     }
 
     private void ClearRow(int y)
@@ -175,8 +174,8 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] != null)
             {
-                Destroy(grid[x, y].gameObject); // Hủy GameObject của khối gạch
-                grid[x, y] = null; // Xóa tham chiếu khỏi grid
+                Destroy(grid[x, y].gameObject); 
+                grid[x, y] = null; 
             }
         }
     }
@@ -189,11 +188,11 @@ public class GridManager : MonoBehaviour
             {
                 if (grid[x, y] != null)
                 {
-                    // Di chuyển khối gạch trong mảng dữ liệu
+                    
                     grid[x, y - 1] = grid[x, y];
                     grid[x, y] = null;
 
-                    // Di chuyển khối gạch trong thế giới game (visual)
+                    
                     grid[x, y - 1].position += Vector3.down * spacing;
                 }
             }
@@ -206,10 +205,10 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] == null)
             {
-                return false; // Tìm thấy ô trống, cột chưa đầy
+                return false; 
             }
         }
-        return true; // Không tìm thấy ô trống nào, cột đã đầy
+        return true; 
     }
 
     private void ClearColumn(int x)
@@ -219,8 +218,8 @@ public class GridManager : MonoBehaviour
         {
             if (grid[x, y] != null)
             {
-                Destroy(grid[x, y].gameObject); // Hủy GameObject của khối gạch
-                grid[x, y] = null; // Xóa tham chiếu khỏi grid
+                Destroy(grid[x, y].gameObject);
+                grid[x, y] = null;
             }
         }
     }
