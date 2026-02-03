@@ -39,7 +39,7 @@ public class RegisterManager : MonoBehaviour
     {
         feedbackText.text = "Registering...";
         
-        // Get gender from Dropdown
+        
         string selectedGender = genderRegDropdown.options[genderRegDropdown.value].text;
 
         RegisterData data = new RegisterData

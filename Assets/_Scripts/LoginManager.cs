@@ -28,7 +28,7 @@ public class LoginManager : MonoBehaviour
 
     void GoToRegisterScene()
     {
-        SceneManager.LoadScene("Register"); // Load the new Register scene
+        SceneManager.LoadScene("Register"); 
     }
 
     private IEnumerator LoginCoroutine()
