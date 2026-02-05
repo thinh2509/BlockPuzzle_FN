@@ -1,5 +1,5 @@
-using UnityEngine;
-using TMPro; 
+﻿using UnityEngine;
+using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -8,24 +8,30 @@ public class ScoreManager : MonoBehaviour
     public int CurrentScore { get; private set; } = 0;
     public int ComboCount { get; private set; } = 0;
 
-    [SerializeField] private TextMeshProUGUI scoreText; 
-    [SerializeField] private TextMeshProUGUI comboText; 
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI comboText;
 
     private void Awake()
     {
-        if (Instance == null)
+        // Singleton đơn giản cho từng màn chơi
+        // Nếu có 1 cái khác đang tồn tại thì tự hủy cái này đi để tránh trùng lặp
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            Destroy(this.gameObject);
         }
         else
         {
-            Destroy(gameObject);
+            Instance = this;
+            // QUAN TRỌNG: Đã XÓA dòng DontDestroyOnLoad để nó tự reset khi Replay
         }
     }
 
     private void Start()
     {
+        // Reset điểm về 0 mỗi khi màn chơi bắt đầu lại
+        CurrentScore = 0;
+        ComboCount = 0;
+
         UpdateScoreUI();
         UpdateComboUI();
     }
@@ -48,26 +54,11 @@ public class ScoreManager : MonoBehaviour
         UpdateComboUI();
     }
 
-    //private void UpdateScoreUI()
-    //{
-    //    if (scoreText != null)
-    //    {
-    //        scoreText.text = "Score: " + CurrentScore.ToString();
-    //    }
-    //    else
-    //    {
-    //        Debug.LogWarning("Score TextMeshProUGUI is not assigned in ScoreManager.");
-    //    }
-    //}
     private void UpdateScoreUI()
     {
         if (scoreText != null)
-        {         
-            scoreText.text = "<color=#55AAFF>S</color><color=#FF5555>C</color><color=#FFAA00>O</color><color=#55FF55>R</color><color=#FFDD55>E</color>: " + CurrentScore.ToString();
-        }
-        else
         {
-            UnityEngine.Debug.LogWarning("Score TextMeshProUGUI is not assigned in ScoreManager.");
+            scoreText.text = "<color=#55AAFF>S</color><color=#FF5555>C</color><color=#FFAA00>O</color><color=#55FF55>R</color><color=#FFDD55>E</color>: " + CurrentScore.ToString();
         }
     }
 
@@ -81,12 +72,8 @@ public class ScoreManager : MonoBehaviour
             }
             else
             {
-                comboText.text = null;
+                comboText.text = ""; // Xóa text khi không có combo
             }
-        }
-        else
-        {
-            Debug.LogWarning("Combo TextMeshProUGUI is not assigned in ScoreManager.");
         }
     }
 }
