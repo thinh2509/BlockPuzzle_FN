@@ -320,13 +320,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1209,7 +1209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1570,13 +1570,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1809,13 +1809,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PieceSpawner
   blockPrefabs:
   - {fileID: 8195914734712312960, guid: e33e6baff58fd4b45ba5bb4183468d84, type: 3}
-  - {fileID: 3379690242240777570, guid: c7ac9b4639674624688a5cc45c19d542, type: 3}
   - {fileID: 8195914734712312960, guid: fec37d24da423f1459853a6f10d3552e, type: 3}
   - {fileID: 3379690242240777570, guid: 29dfb0c311336164e910cbe5845f71c1, type: 3}
   - {fileID: 3379690242240777570, guid: 1b57dc31d08bd1e4fbb3e1801cf9a367, type: 3}
   - {fileID: 3379690242240777570, guid: 1e957e8e01760c14f9ef880e002b6f24, type: 3}
   - {fileID: 3379690242240777570, guid: 44d10fb15de5c6e4ca2d9b109059f14a, type: 3}
-  - {fileID: 3379690242240777570, guid: ee5351f828931d1428de1d031bdb5994, type: 3}
   - {fileID: 7037739879328459780, guid: 1d5e10f27f293d541aa060f9876958a8, type: 3}
   - {fileID: 7037739879328459780, guid: 0562853fd0a89f543b9139bc13a7ee43, type: 3}
   - {fileID: 7037739879328459780, guid: 9f305221b49125a4d9eb66ced7936af5, type: 3}
@@ -2035,7 +2033,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -180, y: -150}
-  m_SizeDelta: {x: 200, y: 60}
+  m_SizeDelta: {x: 160, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1766202700
 MonoBehaviour:
@@ -2246,7 +2244,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 180, y: -150}
-  m_SizeDelta: {x: 200, y: 60}
+  m_SizeDelta: {x: 160, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1910067719
 MonoBehaviour:
