@@ -12,6 +12,20 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    // Define a CORS policy
+    var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: MyAllowSpecificOrigins,
+                          policy =>
+                          {
+                              policy.AllowAnyOrigin()
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod();
+                          });
+    });
+
+
     // Add services to the container.
 
     // Configure MongoDB settings
@@ -88,6 +102,9 @@ try
     }
 
     app.UseHttpsRedirection();
+
+    // Enable CORS
+    app.UseCors(MyAllowSpecificOrigins);
 
     app.UseAuthentication();
     app.UseAuthorization();

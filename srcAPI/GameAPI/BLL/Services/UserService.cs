@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebAPI.Configuration;
 using WebAPI.DTOs;
+using System.Linq;
 
 namespace BLL.Services
 {
@@ -20,6 +21,11 @@ namespace BLL.Services
         {
             _userRepository = userRepository;
             _jwtSettings = jwtSettings;
+        }
+
+        public async Task<User> GetUserByIdAsync(string id)
+        {
+            return await _userRepository.GetByIdAsync(id);
         }
 
         public string GenerateJwtToken(User user)
@@ -75,6 +81,28 @@ namespace BLL.Services
             // Generate JWT token
             var token = GenerateJwtToken(user);
             return token;
+        }
+
+        public async Task AddHighScoreAsync(string userId, int scoreValue)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ApplicationException("User not found.");
+            }
+
+            var newScore = new ScoreRecord
+            {
+                Score = scoreValue,
+                Date = DateTime.UtcNow
+            };
+
+            user.HighScores.Add(newScore);
+            
+            // Sort the scores descending and take the top 5
+            user.HighScores = user.HighScores.OrderByDescending(s => s.Score).Take(5).ToList();
+
+            await _userRepository.UpdateAsync(user);
         }
     }
 }

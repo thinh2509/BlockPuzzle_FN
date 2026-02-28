@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
 
 namespace DAL.Entities
 {
@@ -24,5 +25,8 @@ namespace DAL.Entities
         public DateTime? DateOfBirth { get; set; }
         [BsonElement("Gender")]
         public string? Gender { get; set; }
+
+        [BsonElement("HighScores")]
+        public List<ScoreRecord> HighScores { get; set; } = new List<ScoreRecord>();
     }
 }

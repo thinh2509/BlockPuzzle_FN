@@ -16,6 +16,11 @@ namespace DAL.Repositories
             _usersCollection = mongoDatabase.GetCollection<User>("Users");
         }
 
+        public async Task<User> GetByIdAsync(string id)
+        {
+            return await _usersCollection.Find(u => u.Id == id).FirstOrDefaultAsync();
+        }
+
         public async Task<User> GetByEmailAsync(string email)
         {
             return await _usersCollection.Find(u => u.Email == email).FirstOrDefaultAsync();
@@ -24,6 +29,11 @@ namespace DAL.Repositories
         public async Task CreateAsync(User user)
         {
             await _usersCollection.InsertOneAsync(user);
+        }
+
+        public async Task UpdateAsync(User user)
+        {
+            await _usersCollection.ReplaceOneAsync(u => u.Id == user.Id, user);
         }
     }
 }
