@@ -17,8 +17,13 @@ public class LoginManager : MonoBehaviour
 
     private const string ApiBaseUrl = "https://localhost:7051/api/Auth";
 
+    // --- Helper classes for JSON serialization ---
     [System.Serializable]
-    private class LoginData { public string email; public string password; }
+    private class LoginRequestData { public string email; public string password; }
+
+    [System.Serializable]
+    private class LoginResponseData { public string token; }
+
 
     void Start()
     {
@@ -48,7 +53,7 @@ public class LoginManager : MonoBehaviour
         }
 
         feedbackText.text = "Logging in...";
-        LoginData data = new LoginData { email = email, password = password };
+        LoginRequestData data = new LoginRequestData { email = email, password = password };
         string jsonBody = JsonUtility.ToJson(data);
         byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
 
@@ -63,13 +68,44 @@ public class LoginManager : MonoBehaviour
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                feedbackText.text = "Login Successful!";
-                SceneManager.LoadScene("MainMenu");
+                // Deserialize the response to get the token
+                string jsonResponse = request.downloadHandler.text;
+                LoginResponseData responseData = JsonUtility.FromJson<LoginResponseData>(jsonResponse);
+
+                if (responseData != null && !string.IsNullOrEmpty(responseData.token))
+                {
+                    // Save the token
+                    AuthManager.Instance.SetToken(responseData.token);
+
+                    feedbackText.text = "Login Successful!";
+                    yield return new WaitForSeconds(1); // Wait a moment so user can see the message
+                    SceneManager.LoadScene("MainMenu");
+                }
+                else
+                {
+                    feedbackText.text = "Error: Invalid token received.";
+                }
             }
             else
             {
-                string errorMessage = request.downloadHandler.text;
-                if (string.IsNullOrEmpty(errorMessage)) errorMessage = request.error;
+                // Start with the basic error from the request object
+                string errorMessage = request.error;
+
+                // If there's a response body, it might contain a more specific message
+                if (request.downloadHandler != null && !string.IsNullOrEmpty(request.downloadHandler.text))
+                {
+                    // For 401 Unauthorized, we provide a standard message.
+                    if (request.responseCode == 401) {
+                        errorMessage = "Invalid credentials.";
+                    } else {
+                        errorMessage = request.downloadHandler.text;
+                    }
+                }
+                else if (string.IsNullOrEmpty(errorMessage))
+                {
+                    errorMessage = "An unknown error occurred.";
+                }
+
                 feedbackText.text = "Error: " + errorMessage;
             }
         }
