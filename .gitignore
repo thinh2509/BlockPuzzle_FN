@@ -117,3 +117,6 @@ DerivedData/
 !/[Aa]ssets/**/*.meta
 !/[Pp]ackages/
 !/[Pp]rojectSettings/
+
+
+srcAPI/GameAPI/WebAPI/appsettings.json
