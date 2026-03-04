@@ -110,7 +110,9 @@ public class PieceControl : MonoBehaviour
             for(int i = 0; i < transform.childCount; i++)
             {
                 childBlockTransforms[i] = transform.GetChild(i);
-                ScoreManager.Instance.AddPoints(10);
+
+                if (ScoreManager.Instance != null)
+                    ScoreManager.Instance.AddPoints(10);
             }
             gridManager.PlacePiece(childBlockTransforms);
 
@@ -119,11 +121,11 @@ public class PieceControl : MonoBehaviour
             
             this.enabled = false;
 
-            
-            pieceSpawner.OnPiecePlaced(gameObject);
+            if (pieceSpawner != null)
+                pieceSpawner.OnPiecePlaced(gameObject);
 
             
-            gridManager.CheckForCompletedLines();
+           
         }
         else
         {           

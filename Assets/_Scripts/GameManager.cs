@@ -14,6 +14,12 @@ public class GameManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
+    void Start()
+    {
+        // QUAN TRỌNG: đảm bảo pause panel tắt từ đầu game
+        if (pauseMenuPanel != null) pauseMenuPanel.SetActive(false);
+        Time.timeScale = 1f;
+    }
     public void BackToMenu()
     {
         Time.timeScale = 1f;
@@ -29,7 +35,8 @@ public class GameManager : MonoBehaviour
 
     public void OpenPauseMenu()
     {
-        UnityEngine.Debug.Log("DA BAM VAO NUT MENU!");
+        if (ChallengeManager.Instance != null && ChallengeManager.Instance.IsGameOver) return;
+
         if (pauseMenuPanel != null)
         {
             pauseMenuPanel.SetActive(true);

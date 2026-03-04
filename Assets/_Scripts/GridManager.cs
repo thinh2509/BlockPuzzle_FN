@@ -107,6 +107,10 @@ public class GridManager : MonoBehaviour
             }
         }
         CheckForCompletedLines();
+        if (ChallengeManager.Instance != null)
+        {
+            ChallengeManager.Instance.OnBlockPlaced();
+        }
     }
 
     public void CheckForCompletedLines()
@@ -243,4 +247,26 @@ public class GridManager : MonoBehaviour
 
         return true;
     }
+
+    public void PlaceInitialBlock(GameObject blockPrefab, int x, int y)
+    {
+        if (grid == null)
+            grid = new Transform[width, height];
+
+        if (x < 0 || x >= width || y < 0 || y >= height)
+            return;
+
+        if (grid[x, y] != null)
+            return;
+
+        GameObject block = Instantiate(blockPrefab, transform);
+
+        Vector3 worldPos = GridToWorld(new Vector2Int(x, y));
+        block.transform.position = worldPos;
+
+        grid[x, y] = block.transform;
+    }
+
+
+
 }

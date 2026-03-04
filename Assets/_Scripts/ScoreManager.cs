@@ -40,6 +40,11 @@ public class ScoreManager : MonoBehaviour
     {
         CurrentScore += points;
         UpdateScoreUI();
+
+        if (ChallengeManager.Instance != null)
+        {
+            ChallengeManager.Instance.CheckScoreRushWin(CurrentScore);
+        }
     }
 
     public void IncrementCombo()

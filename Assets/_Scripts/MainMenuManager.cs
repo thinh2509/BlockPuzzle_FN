@@ -59,6 +59,11 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene("Gameplay");
     }
 
+    public void Challenge()
+    {
+        SceneManager.LoadScene("Challenge");
+    }
+
     public void Logout()
     {
         // Clear the token from the AuthManager

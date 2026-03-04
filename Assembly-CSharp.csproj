@@ -70,6 +70,7 @@
     <Compile Include="Assets\_Scripts\LoginManager.cs" />
     <Compile Include="Assets\_Scripts\LoginChecker.cs" />
     <Compile Include="Assets\_Scripts\AuthManager.cs" />
+    <Compile Include="Assets\_Scripts\ChallengeManager.cs" />
     <Compile Include="Assets\_Scripts\PieceSpawner.cs" />
     <Compile Include="Assets\_Scripts\MainMenuManager.cs" />
   </ItemGroup>
