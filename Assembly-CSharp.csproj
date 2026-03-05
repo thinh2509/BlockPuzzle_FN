@@ -63,12 +63,15 @@
   <ItemGroup>
     <Compile Include="Assets\_Scripts\BypassCertificateHandler.cs" />
     <Compile Include="Assets\_Scripts\RegisterManager.cs" />
+    <Compile Include="Assets\_Scripts\OneVsOneMenu.cs" />
     <Compile Include="Assets\_Scripts\ScoreManager.cs" />
+    <Compile Include="Assets\_Scripts\WaitingRoomManager.cs" />
     <Compile Include="Assets\_Scripts\GridManager.cs" />
     <Compile Include="Assets\_Scripts\PieceControl.cs" />
     <Compile Include="Assets\_Scripts\GameManager.cs" />
     <Compile Include="Assets\_Scripts\LoginManager.cs" />
     <Compile Include="Assets\_Scripts\LoginChecker.cs" />
+    <Compile Include="Assets\_Scripts\RoomData.cs" />
     <Compile Include="Assets\_Scripts\AuthManager.cs" />
     <Compile Include="Assets\_Scripts\PieceSpawner.cs" />
     <Compile Include="Assets\_Scripts\MainMenuManager.cs" />

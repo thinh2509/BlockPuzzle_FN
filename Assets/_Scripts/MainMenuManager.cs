@@ -1,4 +1,4 @@
-using UnityEngine;
+    using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
@@ -40,6 +40,7 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+       // PlayerPrefs.SetString("userId", "1");
         // Add listeners to buttons, with null checks for safety
         if (playButton != null) playButton.onClick.AddListener(PlayGame);
         if (settingsButton != null) settingsButton.onClick.AddListener(OpenSettings);
