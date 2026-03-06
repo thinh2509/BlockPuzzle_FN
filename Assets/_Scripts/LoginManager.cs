@@ -77,11 +77,13 @@ public class LoginManager : MonoBehaviour
                 LoginResponseData responseData = JsonUtility.FromJson<LoginResponseData>(jsonResponse);
 
                 if (responseData != null && !string.IsNullOrEmpty(responseData.token))
+
                 {
                     // Save the token
                     AuthManager.Instance.SetToken(responseData.token);
                     // ✅ LƯU USER ID
-                    PlayerPrefs.SetString("userId", responseData.userId);
+                   // PlayerPrefs.SetString("userId", responseData.userId);
+                    PlayerPrefs.SetString("userId", "1");
                     PlayerPrefs.Save();
 
                     Debug.Log("Saved userId: " + responseData.userId);

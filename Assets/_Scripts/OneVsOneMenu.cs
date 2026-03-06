@@ -55,6 +55,7 @@ public class OneVsOneMenu : MonoBehaviour
         }
     }
     // Create Room
+  
     public void CreateRoom()
     {
         StartCoroutine(CreateRoomCoroutine());
@@ -62,8 +63,9 @@ public class OneVsOneMenu : MonoBehaviour
 
     IEnumerator CreateRoomCoroutine()
     {
-        string userId = PlayerPrefs.GetString("userId");
-        //Debug.Log("userId gửi lên server: " + userId);
+        // string userId = PlayerPrefs.GetString("userId");
+        string userId = "1";
+        Debug.Log("userId gửi lên server: " + userId);
 
         WWWForm form = new WWWForm();
         form.AddField("userId", userId);
@@ -120,11 +122,13 @@ public class OneVsOneMenu : MonoBehaviour
     {
         StartCoroutine(JoinRoomCoroutine());
     }
-
     IEnumerator JoinRoomCoroutine()
     {
-        string userId = PlayerPrefs.GetString("userId");
+        string userId = "2"; // player 2
         string roomCode = roomCodeInput.text;
+
+        Debug.Log("RoomCode: " + roomCode);
+        Debug.Log("UserId: " + userId);
 
         WWWForm form = new WWWForm();
         form.AddField("userId", userId);
@@ -136,17 +140,59 @@ public class OneVsOneMenu : MonoBehaviour
 
         if (www.result == UnityWebRequest.Result.Success)
         {
-            string roomId = www.downloadHandler.text;
+            string json = www.downloadHandler.text;
 
-            PlayerPrefs.SetString("roomId", roomId);
+            WaitingRoomManager.RoomResponse room =
+                JsonUtility.FromJson<WaitingRoomManager.RoomResponse>(json);
 
-            StartCoroutine(CheckRoomReady(roomId));
+            Debug.Log("Joined room: " + room.roomCode);
+
+            RoomData.CurrentRoomCode = room.roomCode;
+
+            SceneManager.LoadScene("WaitingRoom");
         }
         else
         {
-            Debug.LogError(www.error);
+            Debug.LogError("Join Room Error: " + www.error);
+            Debug.LogError("Server response: " + www.downloadHandler.text);
         }
     }
+
+    //IEnumerator JoinRoomCoroutine()
+    //{
+    //    string userId = PlayerPrefs.GetString("userId");
+    //    string roomCode = roomCodeInput.text;
+    //     Debug.Log("RoomCode: " + roomCode);
+    //    Debug.Log("UserId: " + userId);
+
+    //    WWWForm form = new WWWForm();
+    //    form.AddField("userId", userId);
+    //    form.AddField("roomCode", roomCode);
+
+    //    UnityWebRequest www = UnityWebRequest.Post(baseUrl + "/join", form);
+
+    //    yield return www.SendWebRequest();
+
+    //    if (www.result == UnityWebRequest.Result.Success)
+    //    {
+
+    //        string json = www.downloadHandler.text;
+
+    //        WaitingRoomManager.RoomResponse room =
+    //            JsonUtility.FromJson<WaitingRoomManager.RoomResponse>(json);
+
+    //        Debug.Log("Joined room: " + room.roomCode);
+
+    //        RoomData.CurrentRoomCode = room.roomCode;
+
+    //        SceneManager.LoadScene("WaitingRoom");
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("Join Room Error: " + www.error);
+    //        Debug.LogError("Server response: " + www.downloadHandler.text);
+    //    }
+    //}
 
 
 }

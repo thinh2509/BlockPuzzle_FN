@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("join")]
-        public async Task<IActionResult> Join(string roomCode, string userId)
+        public async Task<IActionResult> Join([FromForm] string roomCode, [FromForm] string userId)
         {
             var room = await _roomService.JoinRoom(roomCode, userId);
 

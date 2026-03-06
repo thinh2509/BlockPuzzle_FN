@@ -47,6 +47,15 @@ public class MainMenuManager : MonoBehaviour
         if (highScoresButton != null) highScoresButton.onClick.AddListener(OnHighScoresButtonClick);
         if (closeHighScoresButton != null) closeHighScoresButton.onClick.AddListener(CloseHighScoresPanel);
         if (quitButton != null) quitButton.onClick.AddListener(Logout);
+        {
+            if (!PlayerPrefs.HasKey("userId"))
+            {
+                PlayerPrefs.SetString("userId", Random.Range(1, 9999).ToString());
+                PlayerPrefs.Save();
+            }
+
+            Debug.Log("UserId: " + PlayerPrefs.GetString("userId"));
+        }
 
         // Initially hide the panel
         if (highScoresPanel != null)
