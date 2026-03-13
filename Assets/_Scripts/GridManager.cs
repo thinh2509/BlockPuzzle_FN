@@ -1,27 +1,53 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GridManager : MonoBehaviour
 {
-    public int width = 10;
-    public int height = 10;
+    public static GridManager Instance;
+
+    public int width = 8;
+    public int height = 8;
     public GameObject cellPrefab;
     public float spacing = 1.1f;
 
     private Transform[,] grid;
 
-    void Start()
+    private void Awake()
     {
+        if (Instance == null) Instance = this;
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        ClearGeneratedCells();
         GenerateGrid();
     }
 
-    void GenerateGrid()
+    private void EnsureGridInitialized()
+    {
+        if (grid == null)
+        {
+            ClearGeneratedCells();
+            GenerateGrid();
+        }
+    }
+
+
+
+    private void GenerateGrid()
     {
         grid = new Transform[width, height];
 
         float gridW = width * spacing;
         float gridH = height * spacing;
-        Vector2 startPos = new Vector2(-gridW / 2 + spacing / 2, -gridH / 2 + spacing / 2);
+
+        Vector2 startPos = new Vector2(
+            -gridW / 2 + spacing / 2,
+            -gridH / 2 + spacing / 2
+        );
 
         for (int x = 0; x < width; x++)
         {
@@ -30,27 +56,14 @@ public class GridManager : MonoBehaviour
                 GameObject newCell = Instantiate(cellPrefab, transform);
                 Vector2 pos = new Vector2(x * spacing, y * spacing) + startPos;
                 newCell.transform.localPosition = pos;
-                newCell.name = $"Cell {x}x{y}";
-            }
-        }
-    }
+                newCell.name = $"Cell_{x}_{y}";
 
-    private void OnDrawGizmos()
-    {
-        // --- SỬA LỖI 1: Thêm UnityEngine. trước Application ---
-        if (UnityEngine.Application.isPlaying) return;
-
-        Gizmos.color = Color.yellow;
-        float gridW = width * spacing;
-        float gridH = height * spacing;
-        Vector2 startPos = new Vector2(-gridW / 2 + spacing / 2, -gridH / 2 + spacing / 2);
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                Vector2 pos = new Vector2(x * spacing, y * spacing) + startPos;
-                Gizmos.DrawWireCube(transform.position + (Vector3)pos, new Vector3(spacing, spacing, 0));
+                SpriteRenderer cellRenderer = newCell.GetComponent<SpriteRenderer>();
+                if (cellRenderer != null)
+                {
+                    cellRenderer.sortingLayerName = "Default";
+                    cellRenderer.sortingOrder = 0;
+                }
             }
         }
     }
@@ -60,7 +73,9 @@ public class GridManager : MonoBehaviour
         Vector3 gridCenter = transform.position;
         float gridW = width * spacing;
         float gridH = height * spacing;
-        return gridCenter - new Vector3(gridW / 2, gridH / 2, 0) + new Vector3(spacing / 2, spacing / 2, 0);
+
+        return gridCenter - new Vector3(gridW / 2, gridH / 2, 0)
+             + new Vector3(spacing / 2, spacing / 2, 0);
     }
 
     public Vector2Int WorldToGrid(Vector3 worldPos)
@@ -74,82 +89,171 @@ public class GridManager : MonoBehaviour
         return new Vector2Int(gridX, gridY);
     }
 
-    public Vector3 GetNearestCellCenter(Vector3 worldPos)
+    public Vector3 GridToWorld(Vector2Int gridPos)
     {
-        Vector2Int gridPos = WorldToGrid(worldPos);
-        return GridToWorld(gridPos);
+        Vector3 gridBottomLeft = GetGridBottomLeft();
+
+        return gridBottomLeft + new Vector3(
+            gridPos.x * spacing,
+            gridPos.y * spacing,
+            0f
+        );
     }
 
-    // --- SỬA LỖI 2: Thêm lại hàm IsWithinGrid ---
-    public bool IsWithinGrid(Vector3 worldPos)
+    public Vector2Int GetNearestGridPos(Vector3 worldPos)
     {
         Vector2Int gridPos = WorldToGrid(worldPos);
-        return gridPos.x >= 0 && gridPos.x < width && gridPos.y >= 0 && gridPos.y < height;
+
+        gridPos.x = Mathf.Clamp(gridPos.x, 0, width - 1);
+        gridPos.y = Mathf.Clamp(gridPos.y, 0, height - 1);
+
+        return gridPos;
+    }
+
+    public Vector3 GetNearestCellCenter(Vector3 worldPos)
+    {
+        return GridToWorld(GetNearestGridPos(worldPos));
+    }
+
+    public bool IsWithinGrid(Vector2Int gridPos)
+    {
+        return gridPos.x >= 0 && gridPos.x < width &&
+               gridPos.y >= 0 && gridPos.y < height;
+    }
+
+    public bool IsWithinGrid(Vector3 worldPos)
+    {
+        return IsWithinGrid(WorldToGrid(worldPos));
     }
 
     public bool IsCellOccupied(int x, int y)
     {
         if (x < 0 || x >= width || y < 0 || y >= height)
-        {
             return true;
-        }
+
         return grid[x, y] != null;
     }
 
-    public void PlacePiece(Transform[] blockPieces)
+    public List<Vector2Int> GetPieceOffsets(Transform pieceRoot)
     {
-        foreach (var block in blockPieces)
+        List<Vector2Int> offsets = new List<Vector2Int>();
+
+        foreach (Transform child in pieceRoot)
         {
-            Vector2Int gridPos = WorldToGrid(block.position);
-            if (gridPos.x >= 0 && gridPos.x < width && gridPos.y >= 0 && gridPos.y < height)
+            int offsetX = Mathf.RoundToInt(child.localPosition.x / spacing);
+            int offsetY = Mathf.RoundToInt(child.localPosition.y / spacing);
+            offsets.Add(new Vector2Int(offsetX, offsetY));
+        }
+
+        return offsets;
+    }
+
+    public bool CanPlacePieceAt(Transform pieceRoot, Vector2Int anchor)
+    {
+        List<Vector2Int> offsets = GetPieceOffsets(pieceRoot);
+
+        foreach (var offset in offsets)
+        {
+            Vector2Int target = anchor + offset;
+
+            if (!IsWithinGrid(target))
+                return false;
+
+            if (grid[target.x, target.y] != null)
+                return false;
+        }
+
+        return true;
+    }
+
+    public bool CanPlaceAt(GameObject piece, Vector2Int gridPos)
+    {
+        return CanPlacePieceAt(piece.transform, gridPos);
+    }
+
+    public bool PlacePiece(Transform pieceRoot)
+    {
+        Vector2Int anchor = GetNearestGridPos(pieceRoot.position);
+        List<Vector2Int> offsets = GetPieceOffsets(pieceRoot);
+
+        if (!CanPlacePieceAt(pieceRoot, anchor))
+        {
+            Debug.LogWarning("PlacePiece called on invalid position.");
+            return false;
+        }
+
+        List<Transform> childBlocks = new List<Transform>();
+        foreach (Transform child in pieceRoot)
+            childBlocks.Add(child);
+
+        for (int i = 0; i < childBlocks.Count; i++)
+        {
+            Transform block = childBlocks[i];
+            Vector2Int target = anchor + offsets[i];
+
+            block.SetParent(transform);
+            block.position = GridToWorld(target);
+            grid[target.x, target.y] = block;
+
+            SpriteRenderer blockRenderer = block.GetComponent<SpriteRenderer>();
+            if (blockRenderer != null)
             {
-                grid[gridPos.x, gridPos.y] = block;
+                blockRenderer.sortingLayerName = "Default";
+                blockRenderer.sortingOrder = 5;
             }
         }
+
+        Destroy(pieceRoot.gameObject);
+
         CheckForCompletedLines();
+
         if (ChallengeManager.Instance != null)
-        {
-            ChallengeManager.Instance.OnBlockPlaced();
-        }
+            ChallengeManager.Instance.UseMove();
+
+        return true;
     }
 
     public void CheckForCompletedLines()
     {
-        int clearedLinesThisTurn = 0;
+        if (ChallengeManager.Instance != null && ChallengeManager.Instance.IsGameOver)
+            return;
+
+        List<int> fullRows = new List<int>();
+        List<int> fullCols = new List<int>();
 
         for (int y = 0; y < height; y++)
         {
             if (IsRowComplete(y))
-            {
-                ClearRow(y);
-                clearedLinesThisTurn++;
-                y--;
-            }
+                fullRows.Add(y);
         }
 
         for (int x = 0; x < width; x++)
         {
             if (IsColumnComplete(x))
-            {
-                ClearColumn(x);
-                clearedLinesThisTurn++;
-                x--;
-            }
+                fullCols.Add(x);
         }
 
-        if (clearedLinesThisTurn > 0)
+        int clearedLines = fullRows.Count + fullCols.Count;
+
+        if (clearedLines == 0)
         {
             if (ScoreManager.Instance != null)
-            {
-                ScoreManager.Instance.IncrementCombo();
-                int basePoints = 100;
-                int comboMultiplier = ScoreManager.Instance.ComboCount + 1;
-                ScoreManager.Instance.AddPoints(basePoints * clearedLinesThisTurn * comboMultiplier);
-            }
+                ScoreManager.Instance.ResetCombo();
+            return;
         }
-        else
+
+        foreach (int y in fullRows)
+            ClearRow(y);
+
+        foreach (int x in fullCols)
+            ClearColumn(x);
+
+        if (ScoreManager.Instance != null)
         {
-            if (ScoreManager.Instance != null) ScoreManager.Instance.ResetCombo();
+            ScoreManager.Instance.IncrementCombo();
+            int basePoints = 100;
+            int comboMultiplier = ScoreManager.Instance.ComboCount + 1;
+            ScoreManager.Instance.AddPoints(basePoints * clearedLines * comboMultiplier);
         }
     }
 
@@ -157,7 +261,18 @@ public class GridManager : MonoBehaviour
     {
         for (int x = 0; x < width; x++)
         {
-            if (grid[x, y] == null) return false;
+            if (grid[x, y] == null)
+                return false;
+        }
+        return true;
+    }
+
+    private bool IsColumnComplete(int x)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            if (grid[x, y] == null)
+                return false;
         }
         return true;
     }
@@ -174,15 +289,6 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private bool IsColumnComplete(int x)
-    {
-        for (int y = 0; y < height; y++)
-        {
-            if (grid[x, y] == null) return false;
-        }
-        return true;
-    }
-
     private void ClearColumn(int x)
     {
         for (int y = 0; y < height; y++)
@@ -195,78 +301,240 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private IEnumerator FadeOutAndDestroy(GameObject blockToDestroy)
+    private IEnumerator FadeOutAndDestroy(GameObject block)
     {
-        SpriteRenderer renderer = blockToDestroy.GetComponent<SpriteRenderer>();
+        SpriteRenderer renderer = block.GetComponent<SpriteRenderer>();
+
         if (renderer != null)
         {
-            float duration = 0.3f;
-            float elapsedTime = 0f;
-            Color originalColor = renderer.color;
+            float duration = 0.15f;
+            float time = 0f;
+            Color original = renderer.color;
 
-            while (elapsedTime < duration)
+            while (time < duration)
             {
-                elapsedTime += Time.deltaTime;
-                float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration);
-                renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+                time += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0f, time / duration);
+                renderer.color = new Color(original.r, original.g, original.b, alpha);
                 yield return null;
             }
         }
-        Destroy(blockToDestroy);
+
+        Destroy(block);
     }
 
-    public Transform[,] GetGridData()
+    public bool CanPlaceAnyBlock(GameObject[] pieces)
     {
-        return grid;
-    }
-
-    public Vector3 GridToWorld(Vector2Int gridPos)
-    {
-        Vector3 gridBottomLeft = GetGridBottomLeft();
-        return gridBottomLeft + new Vector3(gridPos.x * spacing, gridPos.y * spacing, 0);
-    }
-
-    public bool CanPlaceAt(GameObject piece, Vector2Int gridAnchorPos)
-    {
-        if (piece.transform.childCount == 0) return false;
-
-        foreach (Transform child in piece.transform)
+        foreach (var piece in pieces)
         {
-            Vector3 localPos = child.localPosition;
-            int offsetX = Mathf.RoundToInt(localPos.x);
-            int offsetY = Mathf.RoundToInt(localPos.y);
+            if (piece == null) continue;
 
-            int targetX = gridAnchorPos.x + offsetX;
-            int targetY = gridAnchorPos.y + offsetY;
-
-            if (IsCellOccupied(targetX, targetY))
+            for (int x = 0; x < width; x++)
             {
-                return false;
+                for (int y = 0; y < height; y++)
+                {
+                    if (CanPlacePieceAt(piece.transform, new Vector2Int(x, y)))
+                        return true;
+                }
             }
+        }
+
+        return false;
+    }
+
+    public bool NoMovesLeft(GameObject[] pieces)
+    {
+        return !CanPlaceAnyBlock(pieces);
+    }
+
+    public void ClearAllBlocks()
+    {
+        EnsureGridInitialized();
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (grid[x, y] != null)
+                {
+                    Destroy(grid[x, y].gameObject);
+                    grid[x, y] = null;
+                }
+            }
+        }
+    }
+
+
+    public void PlaceObstacleRandom(int amount, GameObject obstaclePrefab)
+    {
+        if (obstaclePrefab == null)
+        {
+            Debug.LogError("Obstacle Prefab is NULL");
+            return;
+        }
+
+        int placed = 0;
+        int safe = 0;
+
+        while (placed < amount && safe < 500)
+        {
+            safe++;
+
+            int x = Random.Range(0, width);
+            int y = Random.Range(0, height);
+
+            Vector2Int anchor = new Vector2Int(x, y);
+
+            GameObject obstacle = Instantiate(
+                obstaclePrefab,
+                GridToWorld(anchor),
+                Quaternion.identity,
+                transform
+            );
+
+            List<Vector2Int> offsets = GetPieceOffsets(obstacle.transform);
+
+            bool valid = true;
+
+            foreach (var offset in offsets)
+            {
+                Vector2Int target = anchor + offset;
+
+                if (!IsWithinGrid(target) || grid[target.x, target.y] != null)
+                {
+                    valid = false;
+                    break;
+                }
+            }
+
+            if (!valid)
+            {
+                Destroy(obstacle);
+                continue;
+            }
+
+            int i = 0;
+            foreach (Transform child in obstacle.transform)
+            {
+                Vector2Int target = anchor + offsets[i];
+
+                child.SetParent(transform);
+                child.position = GridToWorld(target);
+
+                grid[target.x, target.y] = child;
+
+                SpriteRenderer sr = child.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    sr.sortingLayerName = "Default";
+                    sr.sortingOrder = 4;
+                }
+
+                i++;
+            }
+
+            Destroy(obstacle);
+            placed++;
+        }
+    }
+
+    private void ClearGeneratedCells()
+    {
+        List<Transform> childrenToDelete = new List<Transform>();
+
+        foreach (Transform child in transform)
+        {
+            if (child.name.StartsWith("Cell_"))
+            {
+                childrenToDelete.Add(child);
+            }
+        }
+
+        foreach (Transform child in childrenToDelete)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    public bool CanPlaceObstacleShapeAt(Transform obstacleRoot, Vector2Int anchor)
+    {
+        List<Vector2Int> offsets = GetPieceOffsets(obstacleRoot);
+
+        foreach (var offset in offsets)
+        {
+            Vector2Int target = anchor + offset;
+
+            if (!IsWithinGrid(target))
+                return false;
+
+            if (grid[target.x, target.y] != null)
+                return false;
         }
 
         return true;
     }
 
-    public void PlaceInitialBlock(GameObject blockPrefab, int x, int y)
+    public void PlaceRandomObstacleShapes(int amount, GameObject[] obstacleShapePrefabs)
     {
-        if (grid == null)
-            grid = new Transform[width, height];
+        EnsureGridInitialized();
 
-        if (x < 0 || x >= width || y < 0 || y >= height)
+        if (obstacleShapePrefabs == null || obstacleShapePrefabs.Length == 0)
+        {
+            Debug.LogWarning("No obstacle shape prefabs assigned.");
             return;
+        }
 
-        if (grid[x, y] != null)
-            return;
+        int placed = 0;
+        int safe = 0;
 
-        GameObject block = Instantiate(blockPrefab, transform);
+        while (placed < amount && safe < 1000)
+        {
+            safe++;
 
-        Vector3 worldPos = GridToWorld(new Vector2Int(x, y));
-        block.transform.position = worldPos;
+            GameObject prefab = obstacleShapePrefabs[Random.Range(0, obstacleShapePrefabs.Length)];
+            if (prefab == null) continue;
 
-        grid[x, y] = block.transform;
+            int x = Random.Range(0, width);
+            int y = Random.Range(0, height);
+            Vector2Int anchor = new Vector2Int(x, y);
+
+            GameObject obstacleRoot = Instantiate(prefab, GridToWorld(anchor), Quaternion.identity, transform);
+
+            if (!CanPlaceObstacleShapeAt(obstacleRoot.transform, anchor))
+            {
+                Destroy(obstacleRoot);
+                continue;
+            }
+
+            List<Vector2Int> offsets = GetPieceOffsets(obstacleRoot.transform);
+            List<Transform> childBlocks = new List<Transform>();
+
+            foreach (Transform child in obstacleRoot.transform)
+                childBlocks.Add(child);
+
+            for (int i = 0; i < childBlocks.Count; i++)
+            {
+                Transform block = childBlocks[i];
+                Vector2Int target = anchor + offsets[i];
+
+                block.SetParent(transform);
+                block.position = GridToWorld(target);
+                block.name = $"Obstacle_{target.x}_{target.y}";
+
+                SpriteRenderer sr = block.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    sr.sortingLayerName = "Default";
+                    sr.sortingOrder = 4;
+                }
+
+                grid[target.x, target.y] = block;
+            }
+
+            Destroy(obstacleRoot);
+            placed++;
+        }
     }
 
-
-
+    
 }

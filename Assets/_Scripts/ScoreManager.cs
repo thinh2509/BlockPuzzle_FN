@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class ScoreManager : MonoBehaviour
 
     public int CurrentScore { get; private set; } = 0;
     public int ComboCount { get; private set; } = 0;
+
+    public event Action<int> OnScoreChanged;
 
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI comboText;
@@ -28,23 +31,29 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        // Reset điểm về 0 mỗi khi màn chơi bắt đầu lại
-        CurrentScore = 0;
-        ComboCount = 0;
-
-        UpdateScoreUI();
-        UpdateComboUI();
+        ResetScore();
     }
 
+    public void ResetScore()
+    {
+        CurrentScore = 0;
+        ComboCount = 0;
+        UpdateScoreUI();
+        UpdateComboUI();
+        OnScoreChanged?.Invoke(CurrentScore);
+    }
     public void AddPoints(int points)
     {
+        if (ChallengeManager.Instance != null && ChallengeManager.Instance.IsGameOver)
+            return;
         CurrentScore += points;
         UpdateScoreUI();
+        OnScoreChanged?.Invoke(CurrentScore);
 
-        if (ChallengeManager.Instance != null)
+        /*if (ChallengeManager.Instance != null)
         {
             ChallengeManager.Instance.CheckScoreRushWin(CurrentScore);
-        }
+        }*/
     }
 
     public void IncrementCombo()

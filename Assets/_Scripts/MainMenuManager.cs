@@ -5,6 +5,7 @@ using TMPro;
 using System.Collections;
 using System.Text;
 using UnityEngine.Networking;
+using Assets._Scripts;
 
 
 
@@ -21,6 +22,8 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI highScoresText;
     public Button closeHighScoresButton;
 
+    [Header("Challenge Test")]
+    [SerializeField] private ChallengeLevelData testLevel;
     private const string ApiBaseUrl = "https://localhost:7051/api/Score";
 
     // Helper classes for JSON deserialization
@@ -61,6 +64,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void Challenge()
     {
+        if (testLevel == null)
+        {
+            Debug.LogError("Test Level  Inspector.");
+            return;
+        }
+
+        ChallengeSession.SelectedLevel = testLevel;
         SceneManager.LoadScene("Challenge");
     }
 
