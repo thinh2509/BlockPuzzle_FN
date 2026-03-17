@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{DFB577EC-F752-62C9-239F-C00C030B3ADD}</ProjectGuid>
+    <ProjectGuid>{87C4A733-5059-DD45-377B-0035E9BD4287}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.Collections.Editor</AssemblyName>
@@ -624,10 +624,6 @@
       <HintPath>D:\Unity\6000.3.5f2\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEditor.LinuxStandalone.Extensions">
-      <HintPath>D:\Unity\6000.3.5f2\Editor\Data\PlaybackEngines\LinuxStandaloneSupport\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualScripting.YamlDotNet">
       <HintPath>Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
@@ -1199,7 +1195,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.Collections.csproj">
-      <Project>{7F47EE1C-9AC0-D478-735E-65AB0D64F51F}</Project>
+      <Project>{6525CB8F-91C8-AB1A-BA08-F91867FFDF3C}</Project>
       <Name>Unity.Collections</Name>
     </ProjectReference>
   </ItemGroup>

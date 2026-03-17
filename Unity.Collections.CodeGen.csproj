@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{69CE2297-120A-BD97-D38E-9E2532A20294}</ProjectGuid>
+    <ProjectGuid>{A8129751-80E8-1E53-59B4-9A1E63374D61}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.Collections.CodeGen</AssemblyName>
@@ -626,10 +626,6 @@
       <HintPath>D:\Unity\6000.3.5f2\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEditor.LinuxStandalone.Extensions">
-      <HintPath>D:\Unity\6000.3.5f2\Editor\Data\PlaybackEngines\LinuxStandaloneSupport\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library\PackageCache\com.unity.ext.nunit@d8c07649098d\net40\unity-custom\nunit.framework.dll</HintPath>
       <Private>False</Private>
@@ -1153,11 +1149,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.Burst.csproj">
-      <Project>{F0FB46A3-D46B-37A3-1E31-91DF1CC41419}</Project>
+      <Project>{3C126809-4600-8948-CDF3-85210FCF7B01}</Project>
       <Name>Unity.Burst</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Collections.csproj">
-      <Project>{7F47EE1C-9AC0-D478-735E-65AB0D64F51F}</Project>
+      <Project>{6525CB8F-91C8-AB1A-BA08-F91867FFDF3C}</Project>
       <Name>Unity.Collections</Name>
     </ProjectReference>
   </ItemGroup>

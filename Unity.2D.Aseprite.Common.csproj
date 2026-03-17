@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{96416C9A-DF27-0608-1CD5-56DC94C5D731}</ProjectGuid>
+    <ProjectGuid>{4EA6C31C-E1BB-76D0-6B25-3CA5AD217A5A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.2D.Aseprite.Common</AssemblyName>
@@ -623,10 +623,6 @@
       <HintPath>D:\Unity\6000.3.5f2\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEditor.LinuxStandalone.Extensions">
-      <HintPath>D:\Unity\6000.3.5f2\Editor\Data\PlaybackEngines\LinuxStandaloneSupport\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualScripting.YamlDotNet">
       <HintPath>Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
@@ -1202,11 +1198,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.Mathematics.csproj">
-      <Project>{D96CD9A2-E2D0-2E1C-46DE-6395B12AB232}</Project>
+      <Project>{CCCB08C7-E22C-48BA-20E1-4938459B8310}</Project>
       <Name>Unity.Mathematics</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Burst.csproj">
-      <Project>{F0FB46A3-D46B-37A3-1E31-91DF1CC41419}</Project>
+      <Project>{3C126809-4600-8948-CDF3-85210FCF7B01}</Project>
       <Name>Unity.Burst</Name>
     </ProjectReference>
   </ItemGroup>

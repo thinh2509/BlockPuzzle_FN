@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{3873F11A-EAF7-CC13-B4D5-F459E5BA2A7F}</ProjectGuid>
+    <ProjectGuid>{668EFC32-27FA-4D17-5472-BD77FCC3A049}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.InputSystem.TestFramework</AssemblyName>
@@ -1119,7 +1119,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.InputSystem.csproj">
-      <Project>{0274E490-7C93-E52E-90FF-16B063B3DBB1}</Project>
+      <Project>{93B83C70-F6FB-B424-E511-2ACF7B631243}</Project>
       <Name>Unity.InputSystem</Name>
     </ProjectReference>
   </ItemGroup>

@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{0F1CD8C8-63EC-20B5-388B-6D5B2CCB993D}</ProjectGuid>
+    <ProjectGuid>{07698933-1E11-C4D9-0599-2BA80F903163}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.PerformanceTesting.Editor</AssemblyName>
@@ -636,10 +636,6 @@
       <HintPath>D:\Unity\6000.3.5f2\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEditor.LinuxStandalone.Extensions">
-      <HintPath>D:\Unity\6000.3.5f2\Editor\Data\PlaybackEngines\LinuxStandaloneSupport\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library\PackageCache\com.unity.ext.nunit@d8c07649098d\net40\unity-custom\nunit.framework.dll</HintPath>
       <Private>False</Private>
@@ -1163,7 +1159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.PerformanceTesting.csproj">
-      <Project>{4397D01F-5B6A-4C68-2189-180F847AA56F}</Project>
+      <Project>{A183A44A-91C2-7DFF-D437-5017F56A548A}</Project>
       <Name>Unity.PerformanceTesting</Name>
     </ProjectReference>
   </ItemGroup>

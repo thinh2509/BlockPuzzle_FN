@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{4B3F3306-D990-F14C-9E4C-3048C96591B9}</ProjectGuid>
+    <ProjectGuid>{0174BA9C-DC48-4353-F7BD-D39E9D6A417D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.2D.SpriteShape.Editor</AssemblyName>
@@ -642,10 +642,6 @@
       <HintPath>D:\Unity\6000.3.5f2\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEditor.LinuxStandalone.Extensions">
-      <HintPath>D:\Unity\6000.3.5f2\Editor\Data\PlaybackEngines\LinuxStandaloneSupport\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualScripting.YamlDotNet">
       <HintPath>Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
@@ -1217,23 +1213,23 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.InternalAPIEditorBridge.001.csproj">
-      <Project>{565FFF74-7C7B-0C9A-5468-29F146250339}</Project>
+      <Project>{B41194CB-CBBE-80E3-FB76-039CFD70BD87}</Project>
       <Name>Unity.InternalAPIEditorBridge.001</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.2D.Common.Editor.csproj">
-      <Project>{75FB68CA-0F53-B91B-F6C6-6CA60F352B61}</Project>
+      <Project>{0E796E4B-5211-27A1-55DB-BCDB8B1860FD}</Project>
       <Name>Unity.2D.Common.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.2D.Common.Runtime.csproj">
-      <Project>{15F7DF38-1E6E-1F76-2F11-7D07B60330DF}</Project>
+      <Project>{7CDDFB48-7BEF-9258-2C49-7EBE3619B46A}</Project>
       <Name>Unity.2D.Common.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.2D.SpriteShape.Runtime.csproj">
-      <Project>{8C5AE413-B005-B278-C60C-7AB0BAD99AD2}</Project>
+      <Project>{5F7E0E3B-DA33-AA27-BA8D-C344FE6EE4D9}</Project>
       <Name>Unity.2D.SpriteShape.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.2D.Common.Path.Editor.csproj">
-      <Project>{27E2E15B-CF0E-F7EB-2BA0-F971DAB78AE9}</Project>
+      <Project>{49953971-86FB-0BFB-7B01-3C91EAC197E8}</Project>
       <Name>Unity.2D.Common.Path.Editor</Name>
     </ProjectReference>
   </ItemGroup>
