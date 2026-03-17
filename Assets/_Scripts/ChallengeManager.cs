@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class ChallengeManager : MonoBehaviour
 {
@@ -35,6 +36,9 @@ public class ChallengeManager : MonoBehaviour
     private ChallengeLevelData currentLevel;
     private float timeLeft;
     private int movesLeft;
+    private int startMoveLimit;
+    private bool limitedBonusClaimed;
+    private HashSet<int> rewardedScoreMilestones = new HashSet<int>();
 
     private const float SuddenDeathMaxTime = 300f;
 
@@ -104,6 +108,9 @@ public class ChallengeManager : MonoBehaviour
             : currentLevel.timeLimit;
 
         movesLeft = currentLevel.moveLimit;
+        startMoveLimit = currentLevel.moveLimit;
+        limitedBonusClaimed = false;
+        rewardedScoreMilestones.Clear();
 
         SetupMode();
 
@@ -119,6 +126,9 @@ public class ChallengeManager : MonoBehaviour
 
     private void SetupMode()
     {
+        if (currentLevel == null || gridManager == null)
+            return;
+
         if (currentLevel.mode != ChallengeModeType.FixedObstacles || gridManager == null)
             return;
 
@@ -166,8 +176,12 @@ public class ChallengeManager : MonoBehaviour
         {
             case ChallengeModeType.ScoreRush:
             case ChallengeModeType.FixedObstacles:
+                if (scoreManager.CurrentScore >= currentLevel.targetScore )
+                    WinLevel();
+                break;
+
             case ChallengeModeType.LimitedMoves:
-                if (scoreManager.CurrentScore >= currentLevel.targetScore && movesLeft > 0)
+                if (scoreManager.CurrentScore >= currentLevel.targetScore)
                     WinLevel();
                 break;
 
@@ -181,7 +195,7 @@ public class ChallengeManager : MonoBehaviour
         }
     }
 
-    private void HandleScoreChanged(int score)
+    /*private void HandleScoreChanged(int score)
     {
         if (IsGameOver || currentLevel == null)
             return;
@@ -221,6 +235,65 @@ public class ChallengeManager : MonoBehaviour
         }
 
         RefreshUI();
+    }*/
+    private void HandleScoreChanged(int score)
+    {
+        if (IsGameOver || currentLevel == null)
+            return;
+
+        if (currentLevel.mode == ChallengeModeType.LimitedMoves)
+        {
+            // 1) Thưởng move theo mốc điểm/combo
+            // Ví dụ: mỗi 100 điểm thưởng 1 move, nhưng mỗi mốc chỉ ăn 1 lần
+            int milestone = score / 100;
+            if (score > 0 && score % 100 == 0 && !rewardedScoreMilestones.Contains(milestone))
+            {
+                rewardedScoreMilestones.Add(milestone);
+                movesLeft++;
+                Debug.Log("Combo/score milestone achieved! +1 move.");
+            }
+
+            // 2) Điều kiện phụ: đạt đủ điểm trong số nước quy định
+            // HandleScoreChanged xảy ra trước UseMove(), nên +1 để tính cả nước hiện tại
+            int movesUsedIncludingCurrent = GetMovesUsed() + 1;
+
+            if (!limitedBonusClaimed &&
+                currentLevel.isTargetPointsEnabled &&
+                score >= currentLevel.targetPointsForLimitedMoves &&
+                movesUsedIncludingCurrent <= currentLevel.maxMovesForLimitedMoves)
+            {
+                limitedBonusClaimed = true;
+
+                if (currentLevel.bonusPointsForTarget > 0 && scoreManager != null)
+                {
+                    scoreManager.AddPoints(currentLevel.bonusPointsForTarget);
+                    Debug.Log("Limited bonus achieved! +" + currentLevel.bonusPointsForTarget + " points.");
+                }
+            }
+        }
+
+        switch (currentLevel.mode)
+        {
+            case ChallengeModeType.ScoreRush:
+            case ChallengeModeType.FixedObstacles:
+                if (score >= currentLevel.targetScore)
+                    WinLevel();
+                break;
+
+            case ChallengeModeType.LimitedMoves:
+                if (score >= currentLevel.targetScore)
+                    WinLevel();
+                break;
+
+            case ChallengeModeType.Survival:
+                // Survival không win ngay khi đạt score, phải chờ hết giờ
+                break;
+
+            case ChallengeModeType.SuddenDeath:
+                break;
+        }
+
+        RefreshUI();
     }
 
     private void HandleTimeUp()
@@ -250,7 +323,7 @@ public class ChallengeManager : MonoBehaviour
                 break;
 
             case ChallengeModeType.LimitedMoves:
-                if (scoreManager.CurrentScore >= currentLevel.targetScore && movesLeft > 0)
+                if (scoreManager.CurrentScore >= currentLevel.targetScore)
                     WinLevel();
                 else
                     LoseLevel();
@@ -268,21 +341,27 @@ public class ChallengeManager : MonoBehaviour
 
         movesLeft--;
 
-        if (scoreManager.CurrentScore % 100 == 0)
-        {
-            movesLeft++;  // Cộng thêm 1 lượt move khi đạt combo
-            Debug.Log("Combo achieved! Move added.");
-        }
+        if (movesLeft < 0)
+            movesLeft = 0;
         RefreshUI();
 
-        if (scoreManager.CurrentScore >= currentLevel.targetScore && movesLeft > 0)
+        if (scoreManager.CurrentScore >= currentLevel.targetScore)
         {
             WinLevel();
             return;
         }
 
         if (movesLeft <= 0)
+        {
             LoseLevel();
+            return;
+        }
+            
+    }
+
+    private int GetMovesUsed()
+    {
+        return Mathf.Max(0, startMoveLimit - movesLeft);
     }
 
     public void HandleNoMovesLeft()
@@ -409,19 +488,19 @@ public class ChallengeManager : MonoBehaviour
         {
             if (currentLevel.mode == ChallengeModeType.LimitedMoves)
             {
-                movesText.text =
-                    "<color=#FFAA00>M</color>" +
-                    "<color=#55AAFF>O</color>" +
-                    "<color=#FFDD55>V</color>" +
-                    "<color=#55FF55>E</color>" +
-                    "<color=#FF5555>S</color>: " +
-                    $"<color=white>{movesLeft}</color>";
+                    movesText.text =
+                        "<color=#FFAA00>M</color>" +
+                        "<color=#55AAFF>O</color>" +
+                        "<color=#FFDD55>V</color>" +
+                        "<color=#55FF55>E</color>" +
+                        "<color=#FF5555>S</color>: " +
+                        $"<color=white>{movesLeft}</color>";
+                }
+                else
+                {
+                    movesText.text = "";
+                }
             }
-            else
-            {
-                movesText.text = "";
-            }
-        }
 
         if (levelText != null && currentLevel != null)
         {
@@ -439,36 +518,6 @@ public class ChallengeManager : MonoBehaviour
             modeText.text = "";
         }
 
-        /*if (currentLevel.mode == ChallengeModeType.LimitedMoves)
-        {
-            if (modeText != null)
-            {
-                modeText.text =
-                    "<color=#FFD700>Condition:</color>" +
-                    $" <color=white>Reach {currentLevel.targetPointsForLimitedMoves} points in {currentLevel.maxMovesForLimitedMoves} moves to get bonus points!</color>";
-            }
-
-            
-            if (scoreManager.CurrentScore >= currentLevel.targetPointsForLimitedMoves && movesLeft <= currentLevel.maxMovesForLimitedMoves)
-            {
-                if (modeText != null)
-                {
-                    modeText.text += "\n<color=#00FF00>Bonus: Points achieved, Move added!</color>";
-                }
-            }
-
-            if (modeText != null)
-            {
-                RectTransform modeRectTransform = modeText.GetComponent<RectTransform>();
-                if (modeRectTransform != null)
-                {
-                    modeRectTransform.anchorMin = new Vector2(1, 1);  // Anchor to top-right
-                    modeRectTransform.anchorMax = new Vector2(1, 1);  // Anchor to top-right
-                    modeRectTransform.anchoredPosition = new Vector2(-10, -10);  // Adjust position slightly for spacing
-                }
-            }
-
-        }*/
 
         if (currentLevel.mode == ChallengeModeType.LimitedMoves)
         {
@@ -479,16 +528,25 @@ public class ChallengeManager : MonoBehaviour
                     "<color=#FFD700>Condition:</color>" +
                     $" <color=white>Reach {currentLevel.targetPointsForLimitedMoves} points in {currentLevel.maxMovesForLimitedMoves} moves to get bonus points!</color>";
 
-                // Set font size to smaller
-                modeText.fontSize = 20; // Adjust as needed to make it smaller
+                
+                modeText.fontSize = 20;
             }
 
-            // Hiển thị thông báo nếu người chơi đã hoàn thành điều kiện phụ (ví dụ: Combo)
-            if (scoreManager.CurrentScore >= currentLevel.targetPointsForLimitedMoves && movesLeft <= currentLevel.maxMovesForLimitedMoves)
+            int movesUsed = GetMovesUsed();
+
+            if (limitedBonusClaimed)
             {
                 if (modeText != null)
                 {
-                    modeText.text += "\n<color=#00FF00>Bonus: Points achieved, Move added!</color>";
+                    modeText.text += $"\n<color=#00FF00>Bonus achieved: +{currentLevel.bonusPointsForTarget} points!</color>";
+                }
+            }
+            else if (scoreManager.CurrentScore >= currentLevel.targetPointsForLimitedMoves &&
+                     movesUsed <= currentLevel.maxMovesForLimitedMoves)
+            {
+                if (modeText != null)
+                {
+                    modeText.text += $"\n<color=#00FF00>Bonus ready: +{currentLevel.bonusPointsForTarget} points</color>";
                 }
             }
 
