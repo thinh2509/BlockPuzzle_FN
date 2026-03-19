@@ -1,5 +1,6 @@
 ﻿using BLL.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace WebAPI.Controllers
 {
@@ -86,6 +87,41 @@ public async Task<IActionResult> UpdateScore([FromBody] UpdateScoreRequest reque
         });
     }
 }
+
+        [HttpPut("add-score")]
+        public async Task<IActionResult> AddScore([FromBody] UpdateScoreRequest request)
+        {
+            if (request == null)
+                return BadRequest("Request is null");
+
+            if (string.IsNullOrEmpty(request.RoomId) ||
+                string.IsNullOrEmpty(request.UserId))
+            {
+                return BadRequest("RoomId and UserId are required");
+            }
+
+            try
+            {
+                await _roomService.AddScore(
+                    request.RoomId,
+                    request.UserId,
+                    request.Score
+                );
+
+                return Ok(new
+                {
+                    message = "Score added successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    error = ex.Message
+                });
+            }
+        }
+
         [HttpGet("{roomId}/score")]
         public async Task<IActionResult> GetScore(string roomId)
         {

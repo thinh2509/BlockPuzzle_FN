@@ -57,7 +57,7 @@ public class WaitingRoomManager : MonoBehaviour
                 // Nếu phòng đã full hoặc status khác Waiting
                 if (room.status == "Full" || room.status == "Playing")
                 {
-                    SceneManager.LoadScene("Gameplay");
+                    SceneManager.LoadScene("Play1vs1");
                     yield break;
                 }
             }

@@ -108,7 +108,7 @@ public class OneVsOneMenu : MonoBehaviour
 
                 if (json.Contains("Full"))
                 {
-                    SceneManager.LoadScene("Gameplay");
+                    SceneManager.LoadScene("Play1vs1");
                     yield break;
                 }
             }

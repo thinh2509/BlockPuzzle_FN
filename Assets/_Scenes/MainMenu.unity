@@ -305,8 +305,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -917,8 +917,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -167.01068}
-  m_SizeDelta: {x: 600, y: 60}
+  m_AnchoredPosition: {x: 437.52594, y: -170.54466}
+  m_SizeDelta: {x: 875.0519, y: 53.696434}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &525385263
 MonoBehaviour:
@@ -2457,8 +2457,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -25.670227}
-  m_SizeDelta: {x: 600, y: 60}
+  m_AnchoredPosition: {x: 437.52594, y: -26.848217}
+  m_SizeDelta: {x: 875.0519, y: 53.696434}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &901195524
 MonoBehaviour:
@@ -3062,11 +3062,11 @@ RectTransform:
   - {fileID: 678479598}
   - {fileID: 1936296123}
   - {fileID: 13716626}
-  - {fileID: 1148040942}
   - {fileID: 937377554}
-  - {fileID: 1217465986}
-  - {fileID: 1263992832}
   - {fileID: 605572205}
+  - {fileID: 1263992832}
+  - {fileID: 1217465986}
+  - {fileID: 1148040942}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3618,8 +3618,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -600.35706}
-  m_SizeDelta: {x: 600, y: 60}
+  m_AnchoredPosition: {x: 437.52594, y: -323.5661}
+  m_SizeDelta: {x: 875.0519, y: 72.346436}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1197166584
 MonoBehaviour:
@@ -3692,15 +3692,15 @@ RectTransform:
   m_Children:
   - {fileID: 901195523}
   - {fileID: 525385262}
+  - {fileID: 1197166583}
   - {fileID: 1615663422}
   - {fileID: 1244053607}
-  - {fileID: 1197166583}
   m_Father: {fileID: 961185506}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: -400}
+  m_AnchoredPosition: {x: -14.7041, y: -16.4339}
+  m_SizeDelta: {x: 875.0519, y: -432.8678}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1217465987
 MonoBehaviour:
@@ -3741,7 +3741,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6431373, g: 1, b: 0.8383672, a: 1}
+  m_Color: {r: 0.39215687, g: 0.62352943, b: 0.21960786, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3854,8 +3854,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -449.6916}
-  m_SizeDelta: {x: 600, y: 60}
+  m_AnchoredPosition: {x: 437.52594, y: -620.28394}
+  m_SizeDelta: {x: 875.0519, y: 53.696434}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1244053608
 MonoBehaviour:
@@ -3991,7 +3991,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -320, y: 430}
   m_SizeDelta: {x: 550, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1263992833
@@ -4337,8 +4337,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -308.35114}
-  m_SizeDelta: {x: 600, y: 60}
+  m_AnchoredPosition: {x: 437.52594, y: -476.58752}
+  m_SizeDelta: {x: 875.0519, y: 53.696434}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1615663423
 MonoBehaviour:
@@ -4612,7 +4612,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter Room Code
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4639,8 +4639,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

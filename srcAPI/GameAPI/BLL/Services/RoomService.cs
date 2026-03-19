@@ -92,6 +92,29 @@ namespace BLL.Services
         {
             return await _roomRepo.GetById(roomId);
         }
+
+        public async Task AddScore(string roomId, string userId, int score)
+        {
+            var room = await _roomRepo.GetById(roomId);
+            if (room == null)
+                throw new Exception("Room not found");
+
+            if (room.Player1Id == userId)
+            {
+                room.Player1Score += score;
+            }
+            else if (room.Player2Id == userId)
+            {
+                room.Player2Score += score;
+            }
+            else
+            {
+                throw new Exception("User not in this room");
+            }
+
+            await _roomRepo.UpdateRoom(room);
+        }
+
         private string GenerateCode()
         {
             return new Random().Next(100000, 999999).ToString();
