@@ -21,9 +21,8 @@ UserSettings/
 # =========================
 # User-specific files
 # =========================
-*.csproj
+
 *.unityproj
-*.sln
 *.suo
 *.user
 *.userprefs
@@ -117,3 +116,5 @@ DerivedData/
 !/[Aa]ssets/**/*.meta
 !/[Pp]ackages/
 !/[Pp]rojectSettings/
+
+srcAPI/GameAPI/WebAPI/appsettings.json

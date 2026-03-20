@@ -15,3 +15,97 @@
   "dateOfBirth": "2026-01-31T07:36:39.980Z",
   "gender": "string"
 }
+
+
+
+/api/Score/add
+
+{
+  "score": 0
+}
+
+
+/api/Score/highscores
+
+ {
+    "score": 920,
+    "date": "2026-02-28T06:43:18.337Z"
+  }
+
+api put: /api/Room/add-score
+
+{
+  "roomId": "string",
+  "userId": "string",
+  "score": 0
+}
+
+
+get: /api/Room/{roomCode}
+response body
+{
+  "id": "cc0702d4-f019-4563-a993-46803b2ea25b",
+  "roomCode": "820188",
+  "player1Id": "3",
+  "player2Id": null,
+  "player1Score": 0,
+  "player2Score": 0,
+  "status": "Waiting",
+  "createdAt": "2026-03-19T08:35:27.154Z"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
