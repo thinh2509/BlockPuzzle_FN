@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/_Scenes/Register.unity
     guid: 4ca59645fdeb7b34dba198094101795a
   - enabled: 1
+    path: Assets/_Scenes/Solo.unity
+    guid: 1b58dc39f949e0646af75a572c0c549d
+  - enabled: 1
     path: Assets/_Scenes/WaitingRoom.unity
     guid: cb2eaea3b3f7d124396b5096cecbadec
   m_configObjects: {}

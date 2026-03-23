@@ -15,13 +15,14 @@ public class MultiplayerManager : MonoBehaviour
     public TextMeshProUGUI opponentScoreText;
     
     [Header("End Game Panels")]
+    public GameObject resultPanel; // Bảng cha chứa Win và Lose
     public GameObject winPanel;
     public GameObject losePanel;
 
     private HubConnection connection;
     private int opponentScore = 0;
     
-    private float timeLeft = 180f; // 180 seconds = 3 minutes
+    private float timeLeft = 60f; // 180 seconds = 3 minutes
     private bool isGameActive = false;
     
     // Dispatcher cho SignalR event
@@ -107,13 +108,17 @@ public class MultiplayerManager : MonoBehaviour
         if (timeLeft > 0)
         {
             timeLeft -= Time.deltaTime;
-            UpdateTimerUI();
 
             if (timeLeft <= 0)
             {
                 timeLeft = 0;
                 isGameActive = false;
+                UpdateTimerUI(); // Cập nhật để hiển thị 00:00 thay vì số âm
                 EvaluateWinner();
+            }
+            else
+            {
+                UpdateTimerUI();
             }
         }
     }
@@ -124,7 +129,8 @@ public class MultiplayerManager : MonoBehaviour
         {
             int minutes = Mathf.FloorToInt(timeLeft / 60);
             int seconds = Mathf.FloorToInt(timeLeft % 60);
-            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            // Giữ lại định dạng chữ TIME nhiều màu
+            timerText.text = string.Format("<color=#FF5555>T</color><color=#55AAFF>I</color><color=#FFAA00>M</color><color=#FFDD55>E</color>: {0:00}:{1:00}", minutes, seconds);
         }
     }
 
@@ -132,7 +138,8 @@ public class MultiplayerManager : MonoBehaviour
     {
         if (opponentScoreText != null)
         {
-            opponentScoreText.text = "Opponent: " + score;
+            // Sử dụng màu Rich text giống hệt với ScoreManager
+            opponentScoreText.text = "<color=#FF5555>O</color><color=#55AAFF>P</color><color=#FFAA00>P</color><color=#FFDD55>O</color><color=#55FF55>N</color><color=#FF5555>E</color><color=#55AAFF>N</color><color=#FFAA00>T</color> <color=#FFDD55>S</color><color=#55FF55>C</color><color=#FF5555>O</color><color=#55AAFF>R</color><color=#FFAA00>E</color>: " + score;
         }
     }
 
@@ -174,6 +181,7 @@ public class MultiplayerManager : MonoBehaviour
         isGameActive = false;
         Time.timeScale = 0f;
 
+        if (resultPanel != null) resultPanel.SetActive(true); // Bật Panel cha trước
         if (isWin && winPanel != null) winPanel.SetActive(true);
         else if (!isWin && losePanel != null) losePanel.SetActive(true);
     }
@@ -183,6 +191,7 @@ public class MultiplayerManager : MonoBehaviour
         isGameActive = false;
         Time.timeScale = 0f;
 
+        if (resultPanel != null) resultPanel.SetActive(true); // Bật Panel cha trước
         // Nếu hòa, tạm thời bật WinPanel (hoặc bạn có thể nhân bản tạo thêm drawPanel)
         if (winPanel != null) winPanel.SetActive(true);
     }
