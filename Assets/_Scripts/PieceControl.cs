@@ -14,16 +14,24 @@ public class PieceControl : MonoBehaviour
         
         originalScale = transform.localScale;
         
-        gridManager = FindObjectOfType<GridManager>();
-        pieceSpawner = FindObjectOfType<PieceSpawner>();
+        gridManager = FindFirstObjectByType<GridManager>();
+        pieceSpawner = FindFirstObjectByType<PieceSpawner>();
     }
 
     void Update()
     {
+        if (ChallengeManager.Instance != null && ChallengeManager.Instance.IsGameOver)
+            return;
+
+        if (Camera.main == null)
+            return;
         
+
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos.z = 0f;
+
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
 
             if (hit.collider != null && hit.collider.transform.parent == transform)
@@ -45,6 +53,7 @@ public class PieceControl : MonoBehaviour
         if (isDragging && Input.GetMouseButton(0))
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos.z = 0f;
             transform.position = new Vector3(mousePos.x + offset.x, mousePos.y + offset.y, 0);
         }
 
@@ -56,80 +65,49 @@ public class PieceControl : MonoBehaviour
         }
     }
 
-    void CheckPlacement()
+ 
+
+    private void CheckPlacement()
     {
-        
-        Vector3 snappedPosition = gridManager.GetNearestCellCenter(transform.position);
-
-        bool canPlace = true;
-        
-        // We need to check for out of bounds as well.
-        // The original logic was missing this, which could be a bug.
-        if (!gridManager.IsWithinGrid(snappedPosition))
-        {
-            canPlace = false;
-        }
-
-        if(canPlace) // Only proceed if the anchor is within the grid
-        {
-            Vector3[] childBlockPositions = new Vector3[transform.childCount];
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                Transform child = transform.GetChild(i);
-                Vector3 positionOffset = child.position - transform.position;
-                childBlockPositions[i] = snappedPosition + positionOffset;
-            }
-
-            foreach (var blockPos in childBlockPositions)
-            {
-                Vector2Int gridCoords = gridManager.WorldToGrid(blockPos);
-
-                if (!gridManager.IsWithinGrid(blockPos))
-                {
-                    canPlace = false;
-                    break;
-                }
-                if (gridManager.IsCellOccupied(gridCoords.x, gridCoords.y))
-                {
-                    canPlace = false;
-                    break; 
-                }
-            }
-        }
+        if (ChallengeManager.Instance != null && ChallengeManager.Instance.IsGameOver)
+            return;
 
 
-        
+        if (ChallengeManager.Instance != null && ChallengeManager.Instance.IsGameOver)
+            return;
+
+        if (gridManager == null) return;
+
+        Vector2Int anchor = gridManager.GetNearestGridPos(transform.position);
+        bool canPlace = gridManager.CanPlacePieceAt(transform, anchor);
+
         if (canPlace)
         {
-            
-            transform.position = snappedPosition;
-            
+            transform.position = gridManager.GridToWorld(anchor);
             transform.localScale = originalScale;
-                     
-            Transform[] childBlockTransforms = new Transform[transform.childCount];
-            for(int i = 0; i < transform.childCount; i++)
+
+            int placedBlockCount = transform.childCount;
+
+            bool placed = gridManager.PlacePiece(transform);
+
+            if (placed)
             {
-                childBlockTransforms[i] = transform.GetChild(i);
-                ScoreManager.Instance.AddPoints(10);
+                if (ScoreManager.Instance != null)
+                    ScoreManager.Instance.AddPoints(placedBlockCount * 10);
+
+                if (pieceSpawner != null)
+                    pieceSpawner.OnPiecePlaced(gameObject);
             }
-            gridManager.PlacePiece(childBlockTransforms);
-
-            Debug.Log("Piece placed successfully!");
-
-            
-            this.enabled = false;
-
-            
-            pieceSpawner.OnPiecePlaced(gameObject);
-
-            
-            gridManager.CheckForCompletedLines();
+            else
+            {
+                transform.position = originalPosition;
+                transform.localScale = originalScale;
+            }
         }
         else
-        {           
+        {
             transform.position = originalPosition;
             transform.localScale = originalScale;
-            Debug.Log("Invalid placement, returning to start.");
         }
     }
 }

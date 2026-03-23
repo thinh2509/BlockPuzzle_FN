@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
@@ -22,7 +22,11 @@ public class LoginManager : MonoBehaviour
     private class LoginRequestData { public string email; public string password; }
 
     [System.Serializable]
-    private class LoginResponseData { public string token; }
+    private class LoginResponseData
+    {
+        public string token;
+        public string userId;
+    }
 
 
     void Start()
@@ -73,9 +77,16 @@ public class LoginManager : MonoBehaviour
                 LoginResponseData responseData = JsonUtility.FromJson<LoginResponseData>(jsonResponse);
 
                 if (responseData != null && !string.IsNullOrEmpty(responseData.token))
+
                 {
                     // Save the token
                     AuthManager.Instance.SetToken(responseData.token);
+                    // ✅ LƯU USER ID
+                   // PlayerPrefs.SetString("userId", responseData.userId);
+                    PlayerPrefs.SetString("userId", "1");
+                    PlayerPrefs.Save();
+
+                    Debug.Log("Saved userId: " + responseData.userId);
 
                     feedbackText.text = "Login Successful!";
                     yield return new WaitForSeconds(1); // Wait a moment so user can see the message
