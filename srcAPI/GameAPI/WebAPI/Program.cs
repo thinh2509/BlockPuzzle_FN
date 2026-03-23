@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebAPI.Configuration;
 using Microsoft.OpenApi.Models;
+using WebAPI.Hubs;
 
 try
 {
@@ -24,6 +25,8 @@ try
                                     .AllowAnyMethod();
                           });
     });
+
+    builder.Services.AddSignalR();
 
 
     // Add services to the container.
@@ -111,6 +114,7 @@ try
     app.UseAuthorization();
 
     app.MapControllers();
+    app.MapHub<GameHub>("/gamehub");
 
     app.Run();
 }

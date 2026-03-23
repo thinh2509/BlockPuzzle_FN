@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using TMPro;
 using System;
 
@@ -49,6 +49,11 @@ public class ScoreManager : MonoBehaviour
         CurrentScore += points;
         UpdateScoreUI();
         OnScoreChanged?.Invoke(CurrentScore);
+
+        if (MultiplayerManager.Instance != null)
+        {
+            MultiplayerManager.Instance.SendScoreUpdate(CurrentScore);
+        }
 
         /*if (ChallengeManager.Instance != null)
         {
