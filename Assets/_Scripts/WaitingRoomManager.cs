@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
@@ -57,7 +57,7 @@ public class WaitingRoomManager : MonoBehaviour
                 // Nếu phòng đã full hoặc status khác Waiting
                 if (room.status == "Full" || room.status == "Playing")
                 {
-                    SceneManager.LoadScene("Gameplay");
+                    SceneManager.LoadScene("Solo");
                     yield break;
                 }
             }

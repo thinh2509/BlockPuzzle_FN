@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -108,7 +108,7 @@ public class OneVsOneMenu : MonoBehaviour
 
                 if (json.Contains("Full"))
                 {
-                    SceneManager.LoadScene("Gameplay");
+                    SceneManager.LoadScene("Solo");
                     yield break;
                 }
             }
