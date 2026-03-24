@@ -50,6 +50,8 @@ public class ScoreManager : MonoBehaviour
         UpdateScoreUI();
         OnScoreChanged?.Invoke(CurrentScore);
 
+        Debug.Log($"[Tracer] ScoreManager about to send to MultiplayerManager! Instance is {(MultiplayerManager.Instance == null ? "NULL" : "VALID")}");
+
         if (MultiplayerManager.Instance != null)
         {
             MultiplayerManager.Instance.SendScoreUpdate(CurrentScore);

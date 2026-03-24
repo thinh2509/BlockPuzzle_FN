@@ -63,7 +63,7 @@ public class OneVsOneMenu : MonoBehaviour
 
     IEnumerator CreateRoomCoroutine()
     {
-        // string userId = PlayerPrefs.GetString("userId");
+        //string userId = PlayerPrefs.GetString("userId");
         string userId = "1";
         Debug.Log("userId gửi lên server: " + userId);
 
@@ -124,6 +124,7 @@ public class OneVsOneMenu : MonoBehaviour
     }
     IEnumerator JoinRoomCoroutine()
     {
+         //string userId = PlayerPrefs.GetString("userId");
         string userId = "2"; // player 2
         string roomCode = roomCodeInput.text;
 

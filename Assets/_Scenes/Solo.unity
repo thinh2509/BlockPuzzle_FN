@@ -989,7 +989,6 @@ GameObject:
   m_Component:
   - component: {fileID: 417040463}
   - component: {fileID: 417040462}
-  - component: {fileID: 417040464}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1029,23 +1028,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &417040464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 417040461}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f46863feb9500d94eb20fb2c4dc94395, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MultiplayerManager
-  timerText: {fileID: 1962453522}
-  opponentScoreText: {fileID: 2035984522}
-  resultPanel: {fileID: 970200364}
-  winPanel: {fileID: 608855249}
-  losePanel: {fileID: 51981370}
 --- !u!1 &495214787
 GameObject:
   m_ObjectHideFlags: 0
@@ -4483,7 +4465,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -27, y: -40}
+  m_AnchoredPosition: {x: -26.99997, y: -40}
   m_SizeDelta: {x: 250, y: 80}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1962453522

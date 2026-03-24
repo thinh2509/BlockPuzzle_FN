@@ -30,10 +30,15 @@ public class MultiplayerManager : MonoBehaviour
 
     private void Awake()
     {
+        UnityEngine.Debug.Log($"[Tracer] MultiplayerManager Awake on object: {gameObject.name} (ID: {GetInstanceID()})");
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject); // Bỏ qua DontDestroyOnLoad nếu bạn chỉ kéo vào Gameplay scene
+            UnityEngine.Debug.Log($"[Tracer] MultiplayerManager.Instance SELETED => {gameObject.name} (ID: {GetInstanceID()})");
+        }
+        else
+        {
+            UnityEngine.Debug.Log($"[Tracer] WARNING! DUPLICATE MultiplayerManager found on: {gameObject.name}. Current Instance is on: {Instance.gameObject.name}");
         }
     }
 
@@ -57,15 +62,16 @@ public class MultiplayerManager : MonoBehaviour
 
     private async Task InitializeSignalR()
     {
-        // Khởi tạo kết nối tới Hub. (Lưu ý: URL server của bạn là https://localhost:7051)
+        // Sử dụng cổng HTTP thay vì HTTPS để tránh lỗi chứng chỉ SSL (từ file launchSettings.json)
         connection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:7051/gamehub")
+            .WithUrl("http://localhost:5244/gamehub")
             .WithAutomaticReconnect()
             .Build();
 
         // Lắng nghe sự kiện từ Server
         connection.On<int>("UpdateOpponentScore", (newScore) =>
         {
+            Debug.Log($"[SignalR] NHẬN ĐƯỢC điểm của đối phương: {newScore}");
             _executionQueue.Enqueue(() =>
             {
                 opponentScore = newScore;
@@ -145,10 +151,12 @@ public class MultiplayerManager : MonoBehaviour
 
     public async void SendScoreUpdate(int newScore)
     {
+        Debug.Log($"[Tracer] SendScoreUpdate on {gameObject.name} (ID: {GetInstanceID()}) | Connection is {(connection == null ? "NULL" : connection.State.ToString())} | RoomCode: '{RoomData.CurrentRoomCode}' | isGameActive: {isGameActive}");
         if (connection != null && connection.State == HubConnectionState.Connected)
         {
             try
             {
+                Debug.Log($"[SignalR] ĐANG GỬI điểm lên server: {newScore}");
                 await connection.InvokeAsync("SendScoreUpdate", RoomData.CurrentRoomCode, newScore);
             }
             catch (Exception ex)
