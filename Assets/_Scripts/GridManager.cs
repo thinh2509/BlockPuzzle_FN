@@ -253,7 +253,13 @@ public class GridManager : MonoBehaviour
             ScoreManager.Instance.IncrementCombo();
             int basePoints = 100;
             int comboMultiplier = ScoreManager.Instance.ComboCount + 1;
-            ScoreManager.Instance.AddPoints(basePoints * clearedLines * comboMultiplier);
+            int pointsToAdd = basePoints * clearedLines * comboMultiplier;
+            ScoreManager.Instance.AddPoints(pointsToAdd);
+
+            if (GameManager1v1.Instance != null)
+            {
+                GameManager1v1.Instance.UpdateMyScore(pointsToAdd);
+            }
         }
     }
 

@@ -15,5 +15,6 @@ namespace BLL.Services
         Task<Room?> GetRoomById(string roomId);
         Task<Room?> GetRoomByCode(string roomCode);
         Task UpdateScore(string roomId, string userId, int score);
+        Task AddScore(string roomId, string userId, int score);
     }
 }
