@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: ChallengeLevel_
   m_EditorClassIdentifier: Assembly-CSharp::Assets._Scripts.ChallengeLevelData
   levelId: 
-  displayName: 
+  displayName: Level 1
   mode: 0
-  levelNumber: 0
-  targetScore: 0
-  timeLimit: 0
-  moveLimit: 0
-  obstacleCount: 0
+  levelNumber: 1
+  targetScore: 500
+  timeLimit: 60
+  moveLimit: 20
+  obstacleCount: 5
   targetPointsForLimitedMoves: 500
   maxMovesForLimitedMoves: 10
   isTargetPointsEnabled: 1

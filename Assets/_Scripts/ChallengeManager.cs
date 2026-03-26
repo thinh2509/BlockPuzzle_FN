@@ -1,4 +1,4 @@
-﻿using Assets._Scripts;
+using Assets._Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -39,6 +39,7 @@ public class ChallengeManager : MonoBehaviour
     private int startMoveLimit;
     private bool limitedBonusClaimed;
     private HashSet<int> rewardedScoreMilestones = new HashSet<int>();
+    private bool isInitialized = false;
 
     private const float SuddenDeathMaxTime = 300f;
 
@@ -76,15 +77,13 @@ public class ChallengeManager : MonoBehaviour
 
         StartChallenge(ChallengeSession.SelectedLevel);
     }
-
     private void Update()
     {
-        if (IsGameOver || currentLevel == null)
+        if (!isInitialized || IsGameOver || currentLevel == null)
             return;
 
         UpdateTimer();
         CheckWinCondition();
-
         RefreshUI();
     }
 
@@ -114,14 +113,17 @@ public class ChallengeManager : MonoBehaviour
 
         SetupMode();
 
+        Debug.Log($"Starting Challenge: {currentLevel.displayName} (Mode: {currentLevel.mode}), Target: {currentLevel.targetScore}, Time: {currentLevel.timeLimit}");
+
         if (pieceSpawner != null)
             pieceSpawner.ResetSpawner();
 
-        // Ẩn 2 dòng gây khó chịu
-        if (modeText != null) modeText.text = "";
-        if (levelText != null) levelText.text = "";
+        // Hiển thị thông tin level
+        if (modeText != null) modeText.text = "Mode: " + currentLevel.mode.ToString();
+        if (levelText != null) levelText.text = "Level: " + currentLevel.displayName;
 
         RefreshUI();
+        isInitialized = true;
     }
 
     private void SetupMode()
@@ -152,6 +154,12 @@ public class ChallengeManager : MonoBehaviour
 
     private void UpdateTimer()
     {
+        if (!isInitialized || IsGameOver || currentLevel == null) return;
+        
+        // Nếu timeLimit là 0 (và ko phải SuddenDeath), coi như vô hạn thời gian, ko chạy timer
+        if (currentLevel.timeLimit <= 0 && currentLevel.mode != ChallengeModeType.SuddenDeath)
+            return;
+
         switch (currentLevel.mode)
         {
             case ChallengeModeType.ScoreRush:
@@ -176,12 +184,12 @@ public class ChallengeManager : MonoBehaviour
         {
             case ChallengeModeType.ScoreRush:
             case ChallengeModeType.FixedObstacles:
-                if (scoreManager.CurrentScore >= currentLevel.targetScore )
+                if (scoreManager.CurrentScore > 0 && scoreManager.CurrentScore >= currentLevel.targetScore )
                     WinLevel();
                 break;
 
             case ChallengeModeType.LimitedMoves:
-                if (scoreManager.CurrentScore >= currentLevel.targetScore)
+                if (scoreManager.CurrentScore > 0 && scoreManager.CurrentScore >= currentLevel.targetScore)
                     WinLevel();
                 break;
 
@@ -238,7 +246,7 @@ public class ChallengeManager : MonoBehaviour
     }*/
     private void HandleScoreChanged(int score)
     {
-        if (IsGameOver || currentLevel == null)
+        if (!isInitialized || IsGameOver || currentLevel == null)
             return;
 
         if (currentLevel.mode == ChallengeModeType.LimitedMoves)
@@ -276,12 +284,12 @@ public class ChallengeManager : MonoBehaviour
         {
             case ChallengeModeType.ScoreRush:
             case ChallengeModeType.FixedObstacles:
-                if (score >= currentLevel.targetScore)
+                if (score > 0 && score >= currentLevel.targetScore)
                     WinLevel();
                 break;
 
             case ChallengeModeType.LimitedMoves:
-                if (score >= currentLevel.targetScore)
+                if (score > 0 && score >= currentLevel.targetScore)
                     WinLevel();
                 break;
 
@@ -298,22 +306,25 @@ public class ChallengeManager : MonoBehaviour
 
     private void HandleTimeUp()
     {
-        if (IsGameOver || currentLevel == null || scoreManager == null)
+        if (!isInitialized || IsGameOver || currentLevel == null || scoreManager == null)
             return;
 
         switch (currentLevel.mode)
         {
             case ChallengeModeType.ScoreRush:
             case ChallengeModeType.FixedObstacles:
-                if (scoreManager.CurrentScore >= currentLevel.targetScore)
+                if (scoreManager.CurrentScore > 0 && scoreManager.CurrentScore >= currentLevel.targetScore)
                     WinLevel();
                 else
                     LoseLevel();
                 break;
 
             case ChallengeModeType.Survival:
-                if (scoreManager.CurrentScore >= currentLevel.targetScore)
+                if (scoreManager.CurrentScore > 0 && scoreManager.CurrentScore >= currentLevel.targetScore)
+                {
+                    Debug.Log("CHALLENGE WIN");
                     WinLevel();
+                }
                 else
                     LoseLevel();
                 break;
@@ -333,7 +344,7 @@ public class ChallengeManager : MonoBehaviour
 
     public void UseMove()
     {
-        if (IsGameOver || currentLevel == null || scoreManager == null)
+        if (!isInitialized || IsGameOver || currentLevel == null || scoreManager == null)
             return;
 
         if (currentLevel.mode != ChallengeModeType.LimitedMoves)
@@ -345,7 +356,7 @@ public class ChallengeManager : MonoBehaviour
             movesLeft = 0;
         RefreshUI();
 
-        if (scoreManager.CurrentScore >= currentLevel.targetScore)
+        if (scoreManager.CurrentScore > 0 && scoreManager.CurrentScore >= currentLevel.targetScore)
         {
             WinLevel();
             return;
@@ -366,7 +377,7 @@ public class ChallengeManager : MonoBehaviour
 
     public void HandleNoMovesLeft()
     {
-        if (IsGameOver || currentLevel == null || scoreManager == null)
+        if (!isInitialized || IsGameOver || currentLevel == null || scoreManager == null)
             return;
 
         switch (currentLevel.mode)
@@ -374,7 +385,7 @@ public class ChallengeManager : MonoBehaviour
             case ChallengeModeType.ScoreRush:
             case ChallengeModeType.FixedObstacles:
             case ChallengeModeType.LimitedMoves:
-                if (scoreManager.CurrentScore >= currentLevel.targetScore)
+                if (scoreManager.CurrentScore > 0 && scoreManager.CurrentScore >= currentLevel.targetScore)
                     WinLevel();
                 else
                     LoseLevel();
@@ -472,6 +483,15 @@ public class ChallengeManager : MonoBehaviour
             if (currentLevel.mode == ChallengeModeType.LimitedMoves)
             {
                 timeText.text = "";
+            }
+            else if (currentLevel.timeLimit <= 0)
+            {
+                timeText.text =
+                    "<color=#FF5555>T</color>" +
+                    "<color=#55AAFF>I</color>" +
+                    "<color=#FFAA00>M</color>" +
+                    "<color=#FFDD55>E</color>: " +
+                    "<color=white>--</color>";
             }
             else
             {

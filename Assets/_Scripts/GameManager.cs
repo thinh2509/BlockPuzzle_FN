@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -33,8 +33,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // QUAN TRỌNG: đảm bảo pause panel tắt từ đầu game
+        // QUAN TRỌNG: đảm bảo các panel kết quả được ẩn từ đầu game
         if (pauseMenuPanel != null) pauseMenuPanel.SetActive(false);
+        if (gameplayGameOverUI != null) gameplayGameOverUI.SetActive(false);
+        if (challengeResultUI != null) challengeResultUI.SetActive(false);
+        
         Time.timeScale = 1f;
     }
     public void BackToMenu()

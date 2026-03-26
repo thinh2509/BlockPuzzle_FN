@@ -550,6 +550,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 366165824}
+  - component: {fileID: 366165825}
   m_Layer: 0
   m_Name: SettingsManager
   m_TagString: Untagged
@@ -572,6 +573,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &366165825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366165823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 962c1c8bbafb0c6429965b114f47a52f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsManager
 --- !u!1 &407907815
 GameObject:
   m_ObjectHideFlags: 0
@@ -1954,8 +1967,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   musicSource: {fileID: 1492083732}
   sfxSource: {fileID: 531709912}
-  backgroundMusic: {fileID: 0}
-  clickSound: {fileID: 0}
 --- !u!4 &1243180685
 Transform:
   m_ObjectHideFlags: 0
@@ -2228,7 +2239,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: b43b74df634c85b4bb79bfb7ef6be664, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
