@@ -47,6 +47,7 @@ public class AudioManager : MonoBehaviour
         if (musicSource != null)
         {
             musicSource.mute = !musicOn;
+            musicSource.loop = true; // Đảm bảo nhạc lặp lại
 
             if (musicOn)
             {
