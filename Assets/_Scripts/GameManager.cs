@@ -49,6 +49,8 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         Time.timeScale = 1f;
+        // Tự động lưu điểm nếu cần trước khi reset (tùy chọn)
+        // ScoreManager.Instance.SubmitScore(); 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -77,6 +79,10 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Time.timeScale = 1f;
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.SubmitScore();
+        }
         SceneManager.LoadScene("MainMenu");
     }
 

@@ -1,6 +1,9 @@
 using UnityEngine;
 using TMPro;
 using System;
+using System.Collections;
+using System.Text;
+using UnityEngine.Networking;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -13,6 +16,11 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI comboText;
+
+    private const string ApiBaseUrl = "https://localhost:7051/api/Score";
+
+    [System.Serializable]
+    private class ScoreData { public int score; }
 
     private void Awake()
     {
@@ -98,4 +106,51 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
+    public void SubmitScore()
+    {
+        if (AuthManager.Instance != null && AuthManager.Instance.IsLoggedIn)
+        {
+            StartCoroutine(SubmitScoreCoroutine());
+        }
+        else
+        {
+            Debug.LogWarning("ScoreManager: User not logged in, score will not be saved.");
+        }
+    }
+
+    private IEnumerator SubmitScoreCoroutine()
+    {
+        if (CurrentScore <= 0) yield break;
+
+        ScoreData data = new ScoreData { score = CurrentScore };
+        string jsonBody = JsonUtility.ToJson(data);
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
+
+        using (UnityWebRequest request = new UnityWebRequest($"{ApiBaseUrl}/add", "POST"))
+        {
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            if (AuthManager.Instance != null && AuthManager.Instance.IsLoggedIn)
+            {
+                string token = AuthManager.Instance.AuthToken;
+                request.SetRequestHeader("Authorization", "Bearer " + token);
+            }
+
+            request.certificateHandler = new BypassCertificateHandler();
+
+            yield return request.SendWebRequest();
+
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("ScoreManager: Error submitting score: " + request.error);
+                Debug.LogError("Response: " + request.downloadHandler.text);
+            }
+            else
+            {
+                Debug.Log("ScoreManager: Score submitted successfully!");
+            }
+        }
+    }
 }
