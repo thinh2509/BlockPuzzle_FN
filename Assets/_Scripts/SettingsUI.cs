@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,18 +15,27 @@ public class SettingsUI : MonoBehaviour
 
     private void LoadUI()
     {
-        musicToggle.SetIsOnWithoutNotify(SettingsManager.Instance.IsMusicOn);
-        soundToggle.SetIsOnWithoutNotify(SettingsManager.Instance.IsSoundOn);
+        if (SettingsManager.Instance != null)
+        {
+            musicToggle.SetIsOnWithoutNotify(SettingsManager.Instance.IsMusicOn);
+            soundToggle.SetIsOnWithoutNotify(SettingsManager.Instance.IsSoundOn);
+        }
     }
 
     public void OnMusicToggle(bool isOn)
     {
-        SettingsManager.Instance.SetMusic(isOn);
+        if (SettingsManager.Instance != null)
+        {
+            SettingsManager.Instance.SetMusic(isOn);
+        }
     }
 
     public void OnSoundToggle(bool value)
     {
-        SettingsManager.Instance.SetSound(value);
+        if (SettingsManager.Instance != null)
+        {
+            SettingsManager.Instance.SetSound(value);
+        }
     }
 
 

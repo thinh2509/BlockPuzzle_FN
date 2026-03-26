@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlayClick()
     {
-        if (SettingsManager.Instance.IsSoundOn)
+        if (SettingsManager.Instance != null && SettingsManager.Instance.IsSoundOn)
         {
             sfxSource.PlayOneShot(clickSound);
         }

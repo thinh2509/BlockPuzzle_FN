@@ -1,9 +1,20 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 
 public class SettingsManager : MonoBehaviour
 {
-    public static SettingsManager Instance;
+    private static SettingsManager _instance;
+    public static SettingsManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<SettingsManager>();
+            }
+            return _instance;
+        }
+    }
 
     public bool IsMusicOn { get; private set; }
     public bool IsSoundOn { get; private set; }
@@ -15,13 +26,13 @@ public class SettingsManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
             return;
         }
 
-        Instance = this;
+        _instance = this;
         DontDestroyOnLoad(gameObject);
 
         LoadSettings();

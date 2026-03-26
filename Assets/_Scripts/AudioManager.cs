@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -22,12 +22,21 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        ApplySettings();
-        SettingsManager.Instance.OnSettingsChanged += ApplySettings;
+        if (SettingsManager.Instance != null)
+        {
+            ApplySettings();
+            SettingsManager.Instance.OnSettingsChanged += ApplySettings;
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager: SettingsManager.Instance is null in Start. Skipping ApplySettings.");
+        }
     }
 
     private void ApplySettings()
     {
+        if (SettingsManager.Instance == null) return;
+
         bool musicOn = SettingsManager.Instance.IsMusicOn;
 
         if (musicSource == null)
@@ -52,7 +61,7 @@ public class AudioManager : MonoBehaviour
             }
         }
         
-        if (sfxSource != null)
+        if (sfxSource != null && SettingsManager.Instance != null)
         {
             sfxSource.mute = !SettingsManager.Instance.IsSoundOn;
         }
@@ -60,7 +69,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(AudioClip clip)
     {
-        if (SettingsManager.Instance.IsSoundOn)
+        if (SettingsManager.Instance != null && SettingsManager.Instance.IsSoundOn)
         {
             sfxSource.PlayOneShot(clip);
         }

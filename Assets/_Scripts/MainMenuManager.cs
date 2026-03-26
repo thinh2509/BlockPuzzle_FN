@@ -71,9 +71,11 @@ public class MainMenuManager : MonoBehaviour
         }
 
         // Initialize toggle states when settings open
-        if (musicToggle != null) musicToggle.isOn = SettingsManager.Instance.IsMusicOn;
-        if (soundToggle != null) soundToggle.isOn = SettingsManager.Instance.IsSoundOn;
-
+        if (SettingsManager.Instance != null)
+        {
+            if (musicToggle != null) musicToggle.isOn = SettingsManager.Instance.IsMusicOn;
+            if (soundToggle != null) soundToggle.isOn = SettingsManager.Instance.IsSoundOn;
+        }
     }
 
     public void HideSettingsPopup()
