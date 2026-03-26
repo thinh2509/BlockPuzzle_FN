@@ -22,7 +22,7 @@ public class MultiplayerManager : MonoBehaviour
     private HubConnection connection;
     private int opponentScore = 0;
     
-    private float timeLeft = 60f; // 180 seconds = 3 minutes
+    private float timeLeft = 30f; // 180 seconds = 3 minutes
     private bool isGameActive = false;
     
     // Dispatcher cho SignalR event
