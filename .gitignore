@@ -21,9 +21,8 @@ UserSettings/
 # =========================
 # User-specific files
 # =========================
-*.csproj
+
 *.unityproj
-*.sln
 *.suo
 *.user
 *.userprefs

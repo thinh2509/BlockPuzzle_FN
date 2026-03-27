@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba7a489a56f78354098fb50f2c9bda3e, type: 3}
+  m_Name: ChallengeDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::Assets._Scripts.ChallengeDatabase
+  levels:
+  - {fileID: 11400000, guid: da0abe057f83de24fa0d252091c4214e, type: 2}
+  - {fileID: 11400000, guid: dabfb29e9cb480f4f9bb7ae05ee526e3, type: 2}
+  - {fileID: 11400000, guid: f3f05402f949e8d439c239bf3495a31f, type: 2}
+  - {fileID: 11400000, guid: 8f512e19cf4d1d24fb4f78716c42b11b, type: 2}
+  - {fileID: 11400000, guid: 2ef64d3016bae5d429fee481eeb5f465, type: 2}
+  - {fileID: 11400000, guid: 2406847a47de81f42b51a4118adf2c9e, type: 2}
+  - {fileID: 11400000, guid: 6e6a47238feaae343a8bb4a273fd877a, type: 2}
+  - {fileID: 11400000, guid: 65fc38cd2105bfc469945ed25cfab8bc, type: 2}

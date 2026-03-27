@@ -1,10 +1,11 @@
-using UnityEngine;
+    using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using System.Text;
 using UnityEngine.Networking;
+using Assets._Scripts;
 
 
 
@@ -21,14 +22,15 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI highScoresText;
     public Button closeHighScoresButton;
 
+    [Header("Challenge Test")]
+    [SerializeField] private ChallengeLevelData testLevel;
     private const string ApiBaseUrl = "https://localhost:7051/api/Score";
 
-    // Helper classes for JSON deserialization
     [System.Serializable]
     private class ScoreRecord
     {
         public int score;
-        public string date; // Receive as string
+        public string date; 
     }
 
     [System.Serializable]
@@ -37,26 +39,130 @@ public class MainMenuManager : MonoBehaviour
         public ScoreRecord[] items;
     }
 
+    [SerializeField] private GameObject settingsPopup;
+    [SerializeField] private GameObject mainMenuPanel;
+    [SerializeField] private CanvasGroup mainMenuCanvasGroup;
+
+    [Header("Sound Settings")]
+    public AudioClip buttonClickSound;
+    [SerializeField] private Button closeSettingsButton;
+    [SerializeField] private Toggle musicToggle;
+    [SerializeField] private Toggle soundToggle;
+    [SerializeField] private Toggle Toggle_Vibration;
+
+    public void OpenSettings()
+    {
+        if (mainMenuPanel != null)
+        {
+            mainMenuPanel.SetActive(false);
+        }
+        if (highScoresPanel != null && highScoresPanel.activeSelf)
+        {
+            highScoresPanel.SetActive(false);
+        }
+        settingsPopup.SetActive(true);
+        
+        // Disable interaction and dim the main menu via CanvasGroup
+        if (mainMenuCanvasGroup != null)
+        {
+            mainMenuCanvasGroup.alpha = 0.5f; // Dim the main menu
+            mainMenuCanvasGroup.interactable = false; // Disable interaction
+            mainMenuCanvasGroup.blocksRaycasts = false; // Prevent raycasts from hitting main menu
+        }
+
+        // Initialize toggle states when settings open
+        if (SettingsManager.Instance != null)
+        {
+            if (musicToggle != null) musicToggle.isOn = SettingsManager.Instance.IsMusicOn;
+            if (soundToggle != null) soundToggle.isOn = SettingsManager.Instance.IsSoundOn;
+        }
+    }
+
+    public void HideSettingsPopup()
+    {
+        if (settingsPopup != null)
+        {
+            settingsPopup.SetActive(false); // Deactivate settings popup
+        }
+        if (mainMenuPanel != null)
+        {
+            mainMenuPanel.SetActive(true); // Re-activate main menu when settings close
+        }
+
+        // Re-enable interaction and restore full visibility of the main menu
+        if (mainMenuCanvasGroup != null)
+        {
+            mainMenuCanvasGroup.alpha = 1f; // Restore full visibility
+            mainMenuCanvasGroup.interactable = true; // Re-enable interaction
+            mainMenuCanvasGroup.blocksRaycasts = true; // Allow raycasts to hit main menu
+        }
+        Debug.Log("MainMenuManager: Hiding Settings Popup.");
+    }
 
     void Start()
     {
+       // PlayerPrefs.SetString("userId", "1");
         // Add listeners to buttons, with null checks for safety
         if (playButton != null) playButton.onClick.AddListener(PlayGame);
         if (settingsButton != null) settingsButton.onClick.AddListener(OpenSettings);
         if (highScoresButton != null) highScoresButton.onClick.AddListener(OnHighScoresButtonClick);
         if (closeHighScoresButton != null) closeHighScoresButton.onClick.AddListener(CloseHighScoresPanel);
         if (quitButton != null) quitButton.onClick.AddListener(Logout);
+        
+        // Add click sound listeners for main menu buttons
+        if (playButton != null && buttonClickSound != null) playButton.onClick.AddListener(() => AudioManager.Instance.PlaySFX(buttonClickSound));
+        if (settingsButton != null && buttonClickSound != null) settingsButton.onClick.AddListener(() => AudioManager.Instance.PlaySFX(buttonClickSound));
+        if (highScoresButton != null && buttonClickSound != null) highScoresButton.onClick.AddListener(() => AudioManager.Instance.PlaySFX(buttonClickSound));
+        if (quitButton != null && buttonClickSound != null) quitButton.onClick.AddListener(() => AudioManager.Instance.PlaySFX(buttonClickSound));
+
+
+        // Add click sound listeners for settings panel buttons/toggles
+        if (closeSettingsButton != null && buttonClickSound != null) closeSettingsButton.onClick.AddListener(() => AudioManager.Instance.PlaySFX(buttonClickSound));
+        if (musicToggle != null && buttonClickSound != null) musicToggle.onValueChanged.AddListener((isOn) => AudioManager.Instance.PlaySFX(buttonClickSound));
+        if (soundToggle != null && buttonClickSound != null) soundToggle.onValueChanged.AddListener((isOn) => AudioManager.Instance.PlaySFX(buttonClickSound));
+        if (Toggle_Vibration != null && buttonClickSound != null) Toggle_Vibration.onValueChanged.AddListener((isOn) => AudioManager.Instance.PlaySFX(buttonClickSound));
+
+
+        {
+            if (!PlayerPrefs.HasKey("userId"))
+            {
+                PlayerPrefs.SetString("userId", Random.Range(1, 9999).ToString());
+                PlayerPrefs.Save();
+            }
+
+            Debug.Log("UserId: " + PlayerPrefs.GetString("userId"));
+        }
 
         // Initially hide the panel
         if (highScoresPanel != null)
         {
             highScoresPanel.SetActive(false);
         }
+
+        // Ensure main menu is fully visible and interactable at start
+        if (mainMenuCanvasGroup != null)
+        {
+            mainMenuCanvasGroup.alpha = 1f;
+            mainMenuCanvasGroup.interactable = true;
+            mainMenuCanvasGroup.blocksRaycasts = true;
+        }
     }
 
     public void PlayGame()
     {
         SceneManager.LoadScene("Gameplay");
+    }
+
+    public void Challenge()
+    {
+        if (testLevel == null)
+        {
+            Debug.LogError("Test Level  Inspector.");
+            return;
+        }
+
+        ChallengeSession.SelectedLevel = testLevel;
+        SceneManager.LoadScene("Challenge");
     }
 
     public void Logout()
@@ -71,14 +177,15 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene("Login");
     }
 
-    public void OpenSettings()
-    {
-        // TODO: Implement settings functionality
-        Debug.Log("Settings button clicked.");
-    }
 
     private void OnHighScoresButtonClick()
     {
+        // Deactivate settingsPopup if it's active
+        if (settingsPopup != null && settingsPopup.activeSelf)
+        {
+            settingsPopup.SetActive(false);
+        }
+
         if (AuthManager.Instance == null || !AuthManager.Instance.IsLoggedIn)
         {
             // Optionally, redirect to login or show a message
@@ -95,11 +202,23 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(FetchHighScoresCoroutine());
     }
 
-    private void CloseHighScoresPanel()
+    public void CloseHighScoresPanel()
     {
         if (highScoresPanel != null)
         {
             highScoresPanel.SetActive(false);
+        }
+        // Re-activate main menu when high scores close
+        if (mainMenuPanel != null)
+        {
+            mainMenuPanel.SetActive(true);
+        }
+        // Re-enable interaction and restore full visibility of the main menu
+        if (mainMenuCanvasGroup != null)
+        {
+            mainMenuCanvasGroup.alpha = 1f; // Restore full visibility
+            mainMenuCanvasGroup.interactable = true; // Re-enable interaction
+            mainMenuCanvasGroup.blocksRaycasts = true; // Allow raycasts to hit main menu
         }
     }
 
@@ -167,4 +286,6 @@ public class MainMenuManager : MonoBehaviour
             }
         }
     }
+
+
 }
