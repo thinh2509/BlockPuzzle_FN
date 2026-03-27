@@ -16,8 +16,8 @@ MonoBehaviour:
   displayName: 'Survival '
   mode: 1
   levelNumber: 2
-  targetScore: 800
-  timeLimit: 45
+  targetScore: 300
+  timeLimit: 20
   moveLimit: 0
   obstacleCount: 0
   targetPointsForLimitedMoves: 0

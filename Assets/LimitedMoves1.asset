@@ -16,8 +16,12 @@ MonoBehaviour:
   displayName: Limited Moves
   mode: 3
   levelNumber: 1
-  targetScore: 1500
-  timeLimit: 60
-  moveLimit: 20
+  targetScore: 700
+  timeLimit: 35
+  moveLimit: 15
   obstacleCount: 0
+  targetPointsForLimitedMoves: 500
+  maxMovesForLimitedMoves: 10
+  isTargetPointsEnabled: 1
+  bonusPointsForTarget: 100
   description: 

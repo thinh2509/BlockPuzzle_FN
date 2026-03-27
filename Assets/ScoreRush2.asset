@@ -16,8 +16,8 @@ MonoBehaviour:
   displayName: 'Score Rush '
   mode: 0
   levelNumber: 2
-  targetScore: 300
-  timeLimit: 30
+  targetScore: 400
+  timeLimit: 45
   moveLimit: 0
   obstacleCount: 0
   targetPointsForLimitedMoves: 0

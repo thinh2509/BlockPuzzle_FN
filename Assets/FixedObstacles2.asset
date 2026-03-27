@@ -16,8 +16,8 @@ MonoBehaviour:
   displayName: Fixed Obstacles
   mode: 2
   levelNumber: 2
-  targetScore: 400
-  timeLimit: 80
+  targetScore: 450
+  timeLimit: 65
   moveLimit: 0
   obstacleCount: 0
   targetPointsForLimitedMoves: 0
